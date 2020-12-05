@@ -79,7 +79,7 @@ public class WikipediaHTMLExtractor {
 		}
 	}
 
-	public Boolean isWikiTable(Element htmltable) {
+	public static Boolean isWikiTable(Element htmltable) {
 		if (htmltable.className().equals("wikitable")) {
 			return true;
 		}
@@ -105,11 +105,11 @@ public class WikipediaHTMLExtractor {
 		}
 	}
 
-	private String mkCSVFileName(String url, int n) {
+	private static String mkCSVFileName(String url, int n) {
 		return url.trim() + "-" + n + ".csv";
 	}
 
-	public void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 
 		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
 		String outputDirHtml = "MesOutput" + File.separator + "html" + File.separator;
