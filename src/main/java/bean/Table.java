@@ -34,4 +34,8 @@ public class Table {
 	public void addLine(String[] line) {
 		this.lines.add(line);
 	}
+
+	public String get(int i, int j) {
+		return this.getLines().get(i)[j];
+	}
 }

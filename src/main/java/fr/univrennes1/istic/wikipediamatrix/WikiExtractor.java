@@ -23,7 +23,6 @@ public class WikiExtractor {
 		Document doc = Jsoup.connect(url).get();
 
 //		Document doc = wiki.getDocument(url); // On cree un document avec l'url selectionne
-//		System.out.println(doc);
 		List<Table> res = new ArrayList<Table>();
 		Elements tables = doc.select("table"); // On stock toutes les tables du document cree
 		System.out.println("number of tables: " + tables.size());

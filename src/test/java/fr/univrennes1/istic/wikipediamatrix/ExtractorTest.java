@@ -20,7 +20,12 @@ public class ExtractorTest {
 		List<Table> list = WikiExtractor.extractFromURL(url);
 		System.out.println("number of lists: "+ list.size());
 		assertTrue(list.size() == 15);
-		
+		Table table1 = list.get(0);
+		assertEquals("Kernel name",table1.get(0,0));
+		assertEquals("Amiga Exec",table1.get(1,0));
+		assertEquals("Type",table1.get(0,5));
+		assertEquals("Ipfirewall, PF",table1.get(3,6));
+		assertEquals("Can keep RTC in UT[2]",table1.get(0,15));
 //		https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs
 		
 	}
@@ -30,7 +35,7 @@ public class ExtractorTest {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
 		List<Table> list = WikiExtractor.extractFromURL(url);
 		System.out.println("number of lists: "+ list.size());
-		assertTrue(list.size() == 1);
+		assertTrue(list.size() == 8);
 		
 		
 	}
