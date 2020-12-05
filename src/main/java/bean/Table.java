@@ -31,6 +31,19 @@ public class Table {
 		return this.lines.get(index);
 	}
 
+	public void set(int i, int j, String value) {
+		while (this.getLines().size() < i) {
+			this.addLine(new String[0]);
+		}
+		String[] line1 = this.getLines().get(i);
+		if (line1.length < j) {
+			String[] line2 = new String[j];
+			System.arraycopy(line1, 0, line2, 0, line1.length);
+			this.lines.set(i, line2);
+		}
+		this.getLines().get(i)[j] = value;
+	}
+
 	public void addLine(String[] line) {
 		this.lines.add(line);
 	}
