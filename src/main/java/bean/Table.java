@@ -31,7 +31,9 @@ public class Table {
 		return this.lines.get(index);
 	}
 
-	public void set(int i, int j, String value) {
+	public void set(int rawIndex, int colIndex, String value) {
+		int i = rawIndex;
+		int j = colIndex;
 		while (this.getLines().size() < i) {
 			this.addLine(new String[0]);
 		}
