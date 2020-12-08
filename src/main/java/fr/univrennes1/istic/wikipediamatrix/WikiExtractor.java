@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 import bean.Table;
 
 public class WikiExtractor {
+
 	private static String[] ignoreType = { "navbox mw-collapsible autocollapse",
 			"box-Update plainlinks metadata ambox ambox-content ambox-Update",
 			"nowraplinks mw-collapsible mw-collapsed navbox-inner",
@@ -55,15 +56,15 @@ public class WikiExtractor {
 		for (int i = 0; i < tables.size(); i++) { // On parcourt ces tables wikipedia
 			Element htmltable = tables.get(i); // On selectionne une table wikipedia
 			String tableType = htmltable.className();
-			System.out.println(tableType);
+//			System.out.println(tableType);
 			if (tableType.equals("sortable wikitable") || tableType.equals("wikitable sortable")) {
 				Table wikitable = ParseWikitable.parseTable(htmltable);
 				res.add(wikitable);
-				System.out.println("Table found");
+				System.out.println("Sortable Table found");
 			} else if (tableType.equals("wikitable")) {
 				Table wikitable = ParseWikitable.parseComplexTable(htmltable);
 				res.add(wikitable);
-				System.out.println("Table found");
+				System.out.println("Wikitable found");
 			} else if (listIgnoreType.contains(tableType)) {
 				/* This represents the unacceptable types of table found in the wiki URLs. */
 			} else {
