@@ -46,9 +46,13 @@ public class ExtractorTest {
 //		System.out.println("number of lists: " + list1.size());
 //		System.out.println("number of lists: " + list1.size());
 //		assertTrue(list1.size() == 15);
-		Table table1 = list.get(1);
-		assertEquals("Type", table1.get(0, 0));
-
+		System.out.println("Nombre de tableaux: " + list.size());
+		for (int i = 0; i < list.size(); i++) {
+			System.out
+					.println("Taille contenu du tableau " + i + "/" + list.size() + ": " + list.get(i).getDimensions());
+		}
+//		Table table1 = list.get(1);
+//		assertEquals("Type", table1.get(0, 0));
 
 	}
 

@@ -53,4 +53,15 @@ public class Table {
 	public String get(int i, int j) {
 		return this.getLines().get(i)[j];
 	}
+
+	public ArrayList<Integer> getDimensions() {
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		res.add(this.getLines().size());
+		if (this.getLines().size() == 0) {
+			res.add(0);
+		} else {
+			res.add(this.getLine(0).length);
+		}
+		return res;
+	}
 }
