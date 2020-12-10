@@ -21,11 +21,13 @@ public class ExtractorTest {
 		System.out.println("number of lists: " + list.size());
 		assertTrue(list.size() == 15);
 		Table table1 = list.get(0);
+		System.out.println("Taille du tableau :" + table1.getDimensions());
 		assertEquals("Kernel name", table1.get(0, 0));
 		assertEquals("Amiga Exec", table1.get(1, 0));
 		assertEquals("Type", table1.get(0, 5));
 		assertEquals("Ipfirewall, PF", table1.get(3, 6));
 		assertEquals("Can keep RTC in UT[2]", table1.get(0, 15));
+		CsvWriter.writeCsvFromTable(table1, "Comparison_of_operating_system_kernels");
 	}
 
 	@Test
@@ -49,7 +51,7 @@ public class ExtractorTest {
 		System.out.println("Nombre de tableaux: " + list.size());
 		for (int i = 0; i < list.size(); i++) {
 			System.out
-					.println("Taille contenu du tableau " + i + "/" + list.size() + ": " + list.get(i).getDimensions());
+					.println("Taille du tableau " + i + "/" + list.size() + ": " + list.get(i).getDimensions());
 		}
 //		Table table1 = list.get(1);
 //		assertEquals("Type", table1.get(0, 0));
