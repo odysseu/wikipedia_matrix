@@ -25,7 +25,7 @@ public class CsvWriter {
 					// .withQuoteChar(CSVWriter.NO_QUOTE_CHARACTER)
 					.withEscapeChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER).withLineEnd(CSVWriter.DEFAULT_LINE_END).build();
 
-			csvWriter.writeNext(table.getHeader());
+//			csvWriter.writeNext(table.getHeader());
 			csvWriter.writeAll(table.getLines());
 //			assertTrue();
 			csvWriter.close();

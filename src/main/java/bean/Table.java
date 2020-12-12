@@ -8,15 +8,6 @@ public class Table {
 //	private String[] header;
 	private List<String[]> lines = new ArrayList<String[]>();
 
-////	Header
-//	public String[] getHeader() {
-//		return header;
-//	}
-//
-//	public void setHeader(String[] header) {
-//		this.header = header;
-//	}
-
 // Lines
 	public List<String[]> getLines() {
 		return this.lines;
@@ -34,16 +25,16 @@ public class Table {
 	public void set(int rawIndex, int colIndex, String value) {
 		int i = rawIndex;
 		int j = colIndex;
-		while (this.getLines().size() < i) {
-			this.addLine(new String[0]);
+		while (this.lines.size() < i + 1) {
+			this.lines.add(new String[0]);
 		}
-		String[] line1 = this.getLines().get(i);
-		if (line1.length < j) {
-			String[] line2 = new String[j];
+		String[] line1 = this.lines.get(i);
+		if (line1.length < j + 1) {
+			String[] line2 = new String[j + 1];
 			System.arraycopy(line1, 0, line2, 0, line1.length);
 			this.lines.set(i, line2);
 		}
-		this.getLines().get(i)[j] = value;
+		this.lines.get(i)[j] = value;
 	}
 
 	public void addLine(String[] line) {
@@ -62,7 +53,7 @@ public class Table {
 		int nbCol = 0;
 		for (String[] strings : lines) {
 			int size = strings.length;
-			if (nbCol > size) {
+			if (nbCol < size) {
 				nbCol = size;
 			}
 		}

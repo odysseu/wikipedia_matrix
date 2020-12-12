@@ -63,25 +63,18 @@ public class ParseWikitable {
 			Elements lignes = htmltable.select("tr");
 			int currentRaw = 0;
 			int currentCol = 0;
-			for (int i = 0; i < lignes.size(); i++) {
-				List<String> line = new ArrayList<String>();
-				Element tr = lignes.get(i);
+			for (Element tr : lignes) {
 				Elements cellules = tr.select("td,th");
-				for (int p = 0; p < cellules.size(); p++) {
+				for (Element tdOuTh : cellules) {
 					currentCol = currentCol + 1;
-					Element tdOuTh = cellules.get(p);
-					int colSpan = Integer.valueOf(tdOuTh.hasAttr("colspan") ? tdOuTh.attr("colspan") : "0");
+					int colSpan = Integer.valueOf(tdOuTh.hasAttr("colspan") ? tdOuTh.attr("colspan") : "1");
 					for (int j = 0; j < colSpan; j++) {
-						int rawSpan = Integer.valueOf(tdOuTh.hasAttr("rawspan") ? tdOuTh.attr("rawspan") : "0");
+						int rawSpan = Integer.valueOf(tdOuTh.hasAttr("rawspan") ? tdOuTh.attr("rawspan") : "1");
 						for (int h = 0; h < rawSpan; h++) {
 							currentRaw = currentRaw + 1;
-							// PROBLEME HERE TODO
-//							line.add(tdOuTh.text());
-//							tableau.addLine(line.toArray(new String[0]));
 							tableau.set(currentRaw + h, currentCol + j, tdOuTh.text());
 						}
 					}
-
 				}
 			}
 			return tableau;

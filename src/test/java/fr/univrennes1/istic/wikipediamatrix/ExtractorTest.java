@@ -18,10 +18,10 @@ public class ExtractorTest {
 	public void testExtraction() throws Exception {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_operating_system_kernels";
 		List<Table> list = WikiExtractor.extractFromURL(url);
-		System.out.println("number of lists: " + list.size());
+//		System.out.println("number of lists: " + list.size());
 		assertTrue(list.size() == 15);
 		Table table1 = list.get(0);
-		System.out.println(table1);
+//		System.out.println(table1);
 		assertEquals("Kernel name", table1.get(0, 0));
 		assertEquals("Amiga Exec", table1.get(1, 0));
 		assertEquals("Type", table1.get(0, 5));
@@ -33,27 +33,50 @@ public class ExtractorTest {
 
 	@Test
 	public void testExtraction2() throws Exception {
-		System.out.println("\n This is test Extractor #2.");
+//		System.out.println("\n This is test Extractor #2.");
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
 		List<Table> list = WikiExtractor.extractFromURL(url);
-		System.out.println("number of lists: " + list.size());
+//		System.out.println("number of lists: " + list.size());
 		assertTrue(list.size() == 8);
 
 	}
 
 	@Test
 	public void testExtraction3() throws Exception {
-		System.out.println("\n This is test Extractor #3.");
+//		System.out.println("\n This is test Extractor #3.");
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
 		List<Table> list = WikiExtractor.extractComplexlyFromURL(url);
-//		System.out.println("number of lists: " + list1.size());
-//		System.out.println("number of lists: " + list1.size());
-//		assertTrue(list1.size() == 15);
-		System.out.println("Nombre de tableaux: " + list.size());
-//		for (int i = 0; i < list.size(); i++) {
-//		}
-//		Table table1 = list.get(1);
-//		assertEquals("Type", table1.get(0, 0));
+		Table table1 = list.get(1);
+//		System.out.println(table1);
+		assertEquals("Expected number of Raws", 28, table1.getNbRaw());
+		assertEquals("Expected number of Columns", 90, table1.getNbCol());
+		assertEquals("Type", table1.get(0, 0));
+	}
+
+	@Test
+	public void testTable() throws Exception {
+		Table table = new Table();
+		assertEquals("Nb row for empty table", 0, table.getNbRaw());
+		assertEquals("Nb column for empty table", 0, table.getNbCol());
+
+		table.set(2, 1, "toto");
+		assertEquals("Nb row after set", 3, table.getNbRaw());
+		assertEquals("Nb column after set", 2, table.getNbCol());
+		assertEquals("Content after set", "toto", table.get(2, 1));
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 5; j++) {
+				table.set(i, j, "line " + i + " col " + j);
+			}
+		}
+		assertEquals("Nb row", 3, table.getNbRaw());
+		assertEquals("Nb column", 5, table.getNbCol());
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 5; j++) {
+				assertEquals("Content after set", "line " + i + " col " + j, table.get(i, j));
+			}
+		}
 
 	}
 
