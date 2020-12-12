@@ -62,24 +62,27 @@ public class ParseWikitable {
 		try {
 			Elements lignes = htmltable.select("tr");
 			int currentRaw = 0;
-			int currentCol = 0;
 			for (Element tr : lignes) {
+				int currentCol = 0;
 				Elements cellules = tr.select("td,th");
 				for (Element tdOuTh : cellules) {
-					currentCol = currentCol + 1;
 					int colSpan = Integer.valueOf(tdOuTh.hasAttr("colspan") ? tdOuTh.attr("colspan") : "1");
 					for (int j = 0; j < colSpan; j++) {
-						int rawSpan = Integer.valueOf(tdOuTh.hasAttr("rawspan") ? tdOuTh.attr("rawspan") : "1");
+						int rawSpan = Integer.valueOf(tdOuTh.hasAttr("rowspan") ? tdOuTh.attr("rowspan") : "1");
 						for (int h = 0; h < rawSpan; h++) {
-							currentRaw = currentRaw + 1;
+							while (tableau.get(currentRaw + h, currentCol + j) != null) {
+								currentCol = currentCol + 1;
+							}
 							tableau.set(currentRaw + h, currentCol + j, tdOuTh.text());
 						}
 					}
+					currentCol = currentCol + 1;
 				}
+				currentRaw = currentRaw + 1;
 			}
 			return tableau;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return null;
 		}
 	}

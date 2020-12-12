@@ -62,7 +62,7 @@ public class WikipediaHTMLExtractor {
 			header.add(td.text());
 		}
 		System.out.println(header);
-		tableau.setHeader(header.toArray(new String[0]));
+//		tableau.setHeader(header.toArray(new String[0]));
 		return tableau;
 	}
 
@@ -94,7 +94,7 @@ public class WikipediaHTMLExtractor {
 			ICSVWriter csvWriter = new CSVWriterBuilder(writer).withSeparator(CSVWriter.DEFAULT_SEPARATOR)
 					.withQuoteChar(CSVWriter.NO_QUOTE_CHARACTER).withEscapeChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER)
 					.withLineEnd(CSVWriter.DEFAULT_LINE_END).build();
-			csvWriter.writeNext(table.getHeader());
+//			csvWriter.writeNext(table.getHeader());
 			csvWriter.writeAll(table.getLines());
 			csvWriter.close();
 			writer.close();

@@ -42,6 +42,12 @@ public class Table {
 	}
 
 	public String get(int i, int j) {
+		if (i + 1 > this.getLines().size()) {
+			return null;
+		}
+		if (j + 1 > this.getLines().get(i).length) {
+			return null;
+		}
 		return this.getLines().get(i)[j];
 	}
 
@@ -58,6 +64,17 @@ public class Table {
 			}
 		}
 		return nbCol;
+	}
+
+	public boolean isRectangulaire() {
+		int nbCol = this.lines.get(0).length;
+		for (String[] strings : lines) {
+			int size = strings.length;
+			if (nbCol != size) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
