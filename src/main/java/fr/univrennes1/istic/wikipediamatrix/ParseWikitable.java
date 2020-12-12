@@ -76,8 +76,8 @@ public class ParseWikitable {
 						for (int h = 0; h < rawSpan; h++) {
 							currentRaw = currentRaw + 1;
 							// PROBLEME HERE TODO
-							line.add(tdOuTh.text());
-							tableau.addLine(line.toArray(new String[0]));
+//							line.add(tdOuTh.text());
+//							tableau.addLine(line.toArray(new String[0]));
 							tableau.set(currentRaw + h, currentCol + j, tdOuTh.text());
 						}
 					}

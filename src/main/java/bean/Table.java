@@ -5,17 +5,17 @@ import java.util.List;
 
 public class Table {
 
-	private String[] header;
+//	private String[] header;
 	private List<String[]> lines = new ArrayList<String[]>();
 
-//	Header
-	public String[] getHeader() {
-		return header;
-	}
-
-	public void setHeader(String[] header) {
-		this.header = header;
-	}
+////	Header
+//	public String[] getHeader() {
+//		return header;
+//	}
+//
+//	public void setHeader(String[] header) {
+//		this.header = header;
+//	}
 
 // Lines
 	public List<String[]> getLines() {
@@ -54,14 +54,38 @@ public class Table {
 		return this.getLines().get(i)[j];
 	}
 
-	public ArrayList<Integer> getDimensions() {
-		ArrayList<Integer> res = new ArrayList<Integer>();
-		res.add(this.getLines().size());
-		if (this.getLines().size() == 0) {
-			res.add(0);
-		} else {
-			res.add(this.getLine(0).length);
-		}
-		return res;
+	public int getNbRaw() {
+		return this.getLines().size();
 	}
+
+	public int getNbCol() {
+		int nbCol = 0;
+		for (String[] strings : lines) {
+			int size = strings.length;
+			if (nbCol > size) {
+				nbCol = size;
+			}
+		}
+		return nbCol;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[\n");
+		for (String[] line : lines) {
+			sb.append("[");
+			for (int i = 0; i < line.length; i++) {
+				if (i > 0) {
+					sb.append(" ; ");
+				}
+				sb.append(line[i]);
+			}
+			sb.append("]\n");
+		}
+		sb.append("]");
+
+		return sb.toString();
+	}
+
 }
