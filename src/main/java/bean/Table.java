@@ -5,10 +5,8 @@ import java.util.List;
 
 public class Table {
 
-//	private String[] header;
 	private List<String[]> lines = new ArrayList<String[]>();
 
-// Lines
 	public List<String[]> getLines() {
 		return this.lines;
 	}
@@ -17,7 +15,6 @@ public class Table {
 		this.lines = lines;
 	}
 
-// Line
 	public String[] getLine(int index) {
 		return this.lines.get(index);
 	}

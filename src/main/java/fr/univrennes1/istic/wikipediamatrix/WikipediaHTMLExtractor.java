@@ -1,143 +1,63 @@
 package fr.univrennes1.istic.wikipediamatrix;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.opencsv.CSVWriter;
-import com.opencsv.CSVWriterBuilder;
-import com.opencsv.ICSVWriter;
-
 import bean.Table;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
 public class WikipediaHTMLExtractor {
+	private static String[] relevantType = { "sortable wikitable", "wikitable", "wikitable sortable",
+			"wikitable sortable mw-collapsible", "wikitable mw-collapsible mw-collapsed",
+			"wikitable sortable collapsible", "wikitable sortable plainrowheaders", "wikitable sortable filterable",
+			"wikitable center" };
+	private static String[] ignoreType = { "navbox mw-collapsible autocollapse",
+			"box-Update plainlinks metadata ambox ambox-content ambox-Update",
+			"nowraplinks mw-collapsible mw-collapsed navbox-inner",
+			"nowraplinks hlist mw-collapsible autocollapse navbox-inner", "nowraplinks navbox-subgroup",
+			"box-Multiple_issues plainlinks metadata ambox ambox-content ambox-multiple_issues compact-ambox",
+			"box-Weasel plainlinks metadata ambox ambox-content ambox-Weasel",
+			"box-More_citations_needed plainlinks metadata ambox ambox-content ambox-Refimprove",
+			"box-Notability plainlinks metadata ambox ambox-content ambox-Notability",
+			"nowraplinks mw-collapsible autocollapse navbox-inner",
+			"box-No_footnotes plainlinks metadata ambox ambox-style ambox-No_footnotes", "vertical-navbox nowraplinks",
+			"box-Unreferenced_section plainlinks metadata ambox ambox-content ambox-Unreferenced",
+			"mbox-small plainlinks sistersitebox", "vertical-navbox nowraplinks", "vertical-navbox nowraplinks",
+			"vertical-navbox nowraplinks hlist", "box-Copy_edit plainlinks metadata ambox ambox-style ambox-Copy_edit",
+			"box-Example_farm plainlinks metadata ambox ambox-content",
+			"box-Expand_section plainlinks metadata ambox mbox-small-left ambox-content", "metadata plainlinks stub",
+			"multicol", "toc" };
 
-	private String BASE_WIKIPEDIA_URL;
-	private String outputDirHtml;
-	private String outputDirWikitext;
+	public static List<Table> extractComplexlyFromURL(String url) throws Exception {
+		List<String> listIgnoreType = Arrays.asList(ignoreType);
+		List<String> listRelevantType = Arrays.asList(relevantType);
+		Document doc = Jsoup.connect(url).get();
 
-	public WikipediaHTMLExtractor(String BASE_WIKIPEDIA_URL, String outputDirHtml, String outputDirWikitext) {
-		this.BASE_WIKIPEDIA_URL = BASE_WIKIPEDIA_URL;
-		this.outputDirHtml = outputDirHtml;
-		this.outputDirWikitext = outputDirWikitext;
-	}
-
-	public Document getDocument(String url) throws IOException {
-		Document doc = Jsoup.connect(BASE_WIKIPEDIA_URL + url).get();
-		return doc;
-	}
-
-	public Table fillContent(Table tableau, Elements lignes) {
-		for (int i = 1; i < lignes.size(); i++) {
-			Element tr = lignes.get(i);
-			Elements cellules = tr.select("td");
-
-			List<String> line = new ArrayList<String>();
-			for (Element td : cellules) {
-				line.add(td.text());
+//		Document doc = wiki.getDocument(url); // On cree un document avec l'url selectionne
+		List<Table> res = new ArrayList<Table>();
+		Elements tables = doc.select("table"); // On stock toutes les tables du document cree
+//		System.out.println("number of tables: " + tables.size());
+		for (int i = 0; i < tables.size(); i++) { // On parcourt ces tables wikipedia
+			Element htmltable = tables.get(i); // On selectionne une table wikipedia
+			String tableType = htmltable.className();
+//			System.out.println(tableType);
+			if (listRelevantType.contains(tableType) || tableType.isEmpty()) {
+				Table wikitable = ParseWikitable.parseComplexTable(htmltable);
+				res.add(wikitable);
+//				System.out.println("Sortable Table found");
+			} else if (listIgnoreType.contains(tableType) || tableType.contains("box")) {
+				/* This represents the unacceptable types of table found in the wiki URLs. */
+			} else {
+				throw new Exception("Unknown Table Type: " + tableType);
 			}
-			tableau.addLine(line.toArray(new String[0]));
 		}
-		return tableau;
-	}
-
-	public Table createHeader(Table tableau, Elements lignes) {
-		Element firstTr = lignes.get(0);
-		Elements cellulesHeader = firstTr.select("th");
-		List<String> header = new ArrayList<String>();
-		for (Element td : cellulesHeader) {
-			header.add(td.text());
-		}
-		System.out.println(header);
-//		tableau.setHeader(header.toArray(new String[0]));
-		return tableau;
-	}
-
-	public Table getTable(Element htmlTable) {
-		Table tableau = new Table();
-		try {
-			Elements lignes = htmlTable.select("tr");
-			tableau = createHeader(tableau, lignes);
-			tableau = fillContent(tableau, lignes);
-			return tableau;
-		} catch (Exception e) {
-			System.out.println(e);
-			return null;
-		}
-	}
-
-	public static Boolean isWikiTable(Element htmltable) {
-		if (htmltable.className().equals("wikitable")) {
-			return true;
-		}
-		return false;
-	}
-
-	public void writeCsvFromTable(Table table, String csvFileName, int nurl) {
-
-		try {
-			Writer writer = Files.newBufferedWriter(Paths.get(outputDirWikitext + csvFileName));
-
-			ICSVWriter csvWriter = new CSVWriterBuilder(writer).withSeparator(CSVWriter.DEFAULT_SEPARATOR)
-					.withQuoteChar(CSVWriter.NO_QUOTE_CHARACTER).withEscapeChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER)
-					.withLineEnd(CSVWriter.DEFAULT_LINE_END).build();
-//			csvWriter.writeNext(table.getHeader());
-			csvWriter.writeAll(table.getLines());
-			csvWriter.close();
-			writer.close();
-			System.out.println("NEW FILE #" + nurl + "!\n" + "CSV file : " + csvFileName + " was written");
-
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	private static String mkCSVFileName(String url, int n) {
-		return url.trim() + "-" + n + ".csv";
-	}
-
-	public static void main(String[] args) throws IOException {
-
-		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
-		String outputDirHtml = "MesOutput" + File.separator + "html" + File.separator;
-		String outputDirWikitext = "MesOutput" + File.separator + "wikitext" + File.separator;
-
-		WikipediaHTMLExtractor wiki = new WikipediaHTMLExtractor(BASE_WIKIPEDIA_URL, outputDirHtml, outputDirWikitext);
-		File file = new File("inputdata" + File.separator + "wikiurls.txt");
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		String url;
-		int nurl = 0; // Pour compter le nombre de ligne qu'on a deja fait
-		while ((url = br.readLine()) != null) { // On parcourt tous les lignes du fichier "wikiurls.txt"
-			Document doc = wiki.getDocument(url); // On cree un document avec l'url selectionne
-			System.out.println(doc);
-			Elements tables = doc.select("table"); // On stock toutes les tables du document cree
-			for (int i = 0; i < tables.size(); i++) { // On parcourt ces tables wikipedia
-				Element htmltable = tables.get(i); // On selectionne une table wikipedia
-				if (isWikiTable(htmltable)) { // Si la table est pertinente
-					Table wikitable = wiki.getTable(htmltable); // On stock ce tableau
-					String csvFileName = mkCSVFileName(url, i); // On cree alors le nom du nouveau fichier csv
-					wiki.writeCsvFromTable(wikitable, csvFileName, nurl); // On rentre ce fichier csv dans notre system
-																			// file.
-					System.out.println("On est au " + nurl + i + "ieme tableau");
-				}
-			}
-			nurl++;
-		}
-		br.close();
-		System.out.println("Le programme a fini.");
+		return res;
 	}
 
 }
+// TDD: Test Driven DEv

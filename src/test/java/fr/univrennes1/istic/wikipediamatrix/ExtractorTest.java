@@ -19,7 +19,7 @@ public class ExtractorTest {
 	@Test
 	public void testExtraction() throws Exception {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_operating_system_kernels";
-		List<Table> list = WikiExtractor.extractComplexlyFromURL(url);
+		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
 //		System.out.println("number of lists: " + list.size());
 		assertTrue(list.size() == 15);
 		Table table1 = list.get(0);
@@ -38,7 +38,7 @@ public class ExtractorTest {
 	public void testExtraction2() throws Exception {
 //		System.out.println("\n This is test Extractor #2.");
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
-		List<Table> list = WikiExtractor.extractComplexlyFromURL(url);
+		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
 //		System.out.println("number of lists: " + list.size());
 		assertTrue(list.size() == 8);
 
@@ -48,7 +48,7 @@ public class ExtractorTest {
 	public void testExtraction3() throws Exception {
 //		System.out.println("\n This is test Extractor #3.");
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
-		List<Table> list = WikiExtractor.extractComplexlyFromURL(url);
+		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
 		Table table1 = list.get(1);
 //		System.out.println(table1);
 		assertTrue("table is not rectangulaire", table1.isRectangulaire());
@@ -61,7 +61,7 @@ public class ExtractorTest {
 	public void testExtraction4() throws Exception {
 //		System.out.println("\n This is test Extractor #4.");
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
-		List<Table> list = WikiExtractor.extractComplexlyFromURL(url);
+		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
 		Table table1 = list.get(7);
 //		System.out.println(table1);
 		assertTrue("table is not rectangulaire", table1.isRectangulaire());
@@ -72,41 +72,6 @@ public class ExtractorTest {
 		assertEquals("2", table1.get(1, 2 + 4 * 5));
 		assertEquals("SD1", table1.get(2, 1 + 4 * 10));
 
-	}
-
-	@Test
-	public void testExtractAllUrl() throws Exception {
-		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
-		String outputDirHtml = "MesOutput" + File.separator + "wikiCSVs" + File.separator;
-		String outputDirWikitext = "MesOutput" + File.separator + "wikitext" + File.separator;
-
-		WikipediaHTMLExtractor wiki = new WikipediaHTMLExtractor(BASE_WIKIPEDIA_URL, outputDirHtml, outputDirWikitext);
-		File file = new File("inputdata" + File.separator + "wikiurls.txt");
-
-		List<String> listURLs = new ArrayList();
-
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		String url;
-		int nurl = 0; // Pour compter le nombre de ligne qu'on a deja fait
-		while ((url = br.readLine()) != null) { // On parcourt tous les lignes du fichier "wikiurls.txt"
-			listURLs.add(url);
-		}
-		br.close();
-		for (String name : listURLs) {
-			try {
-				List<Table> listTables = WikiExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
-				for (int i = 0; i < listTables.size(); i++) {
-					Table table = listTables.get(i);
-					String path = outputDirHtml + name + "_" + i + ".csv";
-					CsvWriter.writeCsvFromTable(table, path);
-				}
-			} catch (HttpStatusException e) {
-				System.err.println("Ignoring url " + BASE_WIKIPEDIA_URL + name +" : "+ e.getMessage());
-			} catch (Exception e) {
-				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
-			}
-
-		}
 	}
 
 	@Test
@@ -134,6 +99,44 @@ public class ExtractorTest {
 			}
 		}
 
+	}
+
+	@Test
+	public void testExtractAllUrl() throws Exception {
+		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
+		String outputDirHtml = "MesOutput" + File.separator + "wikiCSVs" + File.separator;
+
+		File file = new File("inputdata" + File.separator + "wikiurls.txt");
+
+		List<String> listURLs = new ArrayList<String>();
+
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		String url;
+		while ((url = br.readLine()) != null) { // On parcourt tous les lignes du fichier "wikiurls.txt"
+			listURLs.add(url);
+		}
+		br.close();
+		for (String name : listURLs) {
+			try {
+				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
+				for (int i = 0; i < listTables.size(); i++) {
+					Table table = listTables.get(i);
+					String path = outputDirHtml + name + "_" + i + ".csv";
+					CsvWriter.writeCsvFromTable(table, path);
+				}
+			} catch (HttpStatusException e) {
+				System.err.println("Ignoring url " + BASE_WIKIPEDIA_URL + name + " : " + e.getMessage());
+			} catch (Exception e) {
+				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
+			}
+
+		}
+	}
+
+	@Test
+	public void TablesCheck() {
+		// TODO: return number of tables with just 1 cell. This is to ignore tables with
+		// too few elementsand see where it comes from.
 	}
 
 }
