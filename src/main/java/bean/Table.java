@@ -22,10 +22,12 @@ public class Table {
 	public void set(int rawIndex, int colIndex, String value) {
 		int i = rawIndex;
 		int j = colIndex;
+
 		while (this.lines.size() < i + 1) {
 			this.lines.add(new String[0]);
 		}
 		String[] line1 = this.lines.get(i);
+
 		if (line1.length < j + 1) {
 			String[] line2 = new String[j + 1];
 			System.arraycopy(line1, 0, line2, 0, line1.length);
@@ -39,9 +41,11 @@ public class Table {
 	}
 
 	public String get(int i, int j) {
+
 		if (i + 1 > this.getLines().size()) {
 			return null;
 		}
+
 		if (j + 1 > this.getLines().get(i).length) {
 			return null;
 		}
@@ -54,8 +58,10 @@ public class Table {
 
 	public int getNbCol() {
 		int nbCol = 0;
+
 		for (String[] strings : lines) {
 			int size = strings.length;
+
 			if (nbCol < size) {
 				nbCol = size;
 			}
@@ -65,8 +71,10 @@ public class Table {
 
 	public boolean isRectangulaire() {
 		int nbCol = this.lines.get(0).length;
+
 		for (String[] strings : lines) {
 			int size = strings.length;
+
 			if (nbCol != size) {
 				return false;
 			}
@@ -78,9 +86,12 @@ public class Table {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[\n");
+
 		for (String[] line : lines) {
 			sb.append("[");
+
 			for (int i = 0; i < line.length; i++) {
+
 				if (i > 0) {
 					sb.append(" ; ");
 				}
