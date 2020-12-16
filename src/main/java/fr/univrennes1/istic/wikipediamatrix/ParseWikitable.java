@@ -15,7 +15,7 @@ public class ParseWikitable {
 
 			for (Element tr : lignes) {
 				int currentCol = 0;
-				Elements cellules = tr.select("td,th");
+				Elements cellules = tr.select("td,th"); //,table TODO: gerer les tables dans les tables par iterations?
 
 				for (Element tdOuTh : cellules) {
 					int colSpan = Integer.valueOf(tdOuTh.hasAttr("colspan") ? tdOuTh.attr("colspan") : "1");

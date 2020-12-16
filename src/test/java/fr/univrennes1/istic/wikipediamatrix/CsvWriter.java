@@ -12,6 +12,7 @@ import com.opencsv.ICSVWriter;
 import bean.Table;
 
 public class CsvWriter {
+
 	public static void writeCsvFromTable(Table table, String path) throws IOException {
 		Writer writer = Files.newBufferedWriter(Paths.get(path));
 		ICSVWriter csvWriter = new CSVWriterBuilder(writer).withSeparator(';')

@@ -101,4 +101,31 @@ public class WikipediaHTMLExtractor {
 		return res;
 	}
 
+	public static List<Table> extractComplexlyFromURL2(String url) throws Exception {
+		List<String> listIgnoreType = Arrays.asList(ignoreType);
+		List<String> listRelevantType = Arrays.asList(relevantType);
+		Document doc = Jsoup.connect(url).get();
+		List<Table> res = new ArrayList<Table>();
+		Elements tables = doc.select("table");
+
+		for (int i = 0; i < tables.size(); i++) {
+			Element htmltable = tables.get(i);
+			String tableType = htmltable.className();
+
+			if (listRelevantType.contains(tableType) || tableType.isEmpty()) {
+				Table wikitable = ParseWikitable.parseComplexTable(htmltable);
+				if (wikitable.isRectangulaire()) {
+					res.add(wikitable);
+				} else {
+					System.out.println(wikitable.toString());
+				}
+
+			} else if (listIgnoreType.contains(tableType)) {
+			} else {
+				throw new Exception("Unknown Table Type: " + tableType);
+			}
+		}
+		return res;
+	}
+
 }
