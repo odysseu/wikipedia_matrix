@@ -12,11 +12,11 @@ import org.jsoup.select.Elements;
 import bean.Table;
 
 public class WikipediaHTMLExtractor {
-	private static String[] relevantType = { "sortable wikitable", "wikitable", "wikitable sortable",
+	public static String[] relevantType = { "sortable wikitable", "wikitable", "wikitable sortable",
 			"wikitable sortable mw-collapsible", "wikitable mw-collapsible mw-collapsed",
 			"wikitable sortable collapsible", "wikitable sortable plainrowheaders", "wikitable sortable filterable",
 			"wikitable center", "multicol", "infobox wikitable" };
-	private static String[] ignoreType = {
+	public static String[] ignoreType = {
 			"box-Multiple_issues plainlinks metadata ambox ambox-content ambox-multiple_issues compact-ambox",
 			"box-Weasel plainlinks metadata ambox ambox-content ambox-Weasel",
 			"box-More_citations_needed plainlinks metadata ambox ambox-content ambox-Refimprove",
@@ -89,38 +89,13 @@ public class WikipediaHTMLExtractor {
 			String tableType = htmltable.className();
 
 			if (listRelevantType.contains(tableType) || tableType.isEmpty()) {
-				Table wikitable = ParseWikitable.parseComplexTable(htmltable);
-				res.add(wikitable);
 
-			} else if (listIgnoreType.contains(tableType)) {
-
-			} else {
-				throw new Exception("Unknown Table Type: " + tableType);
-			}
-		}
-		return res;
-	}
-
-	public static List<Table> extractComplexlyFromURL2(String url) throws Exception {
-		List<String> listIgnoreType = Arrays.asList(ignoreType);
-		List<String> listRelevantType = Arrays.asList(relevantType);
-		Document doc = Jsoup.connect(url).get();
-		List<Table> res = new ArrayList<Table>();
-		Elements tables = doc.select("table");
-
-		for (int i = 0; i < tables.size(); i++) {
-			Element htmltable = tables.get(i);
-			String tableType = htmltable.className();
-
-			if (listRelevantType.contains(tableType) || tableType.isEmpty()) {
-				Table wikitable = ParseWikitable.parseComplexTable(htmltable);
-				if (wikitable.isRectangulaire()) {
+				if (!ParseWikitable.isContainedInAnotherTable(htmltable)) {
+					Table wikitable = ParseWikitable.parseComplexTable(htmltable);
 					res.add(wikitable);
-				} else {
-					System.out.println(wikitable.toString());
 				}
-
 			} else if (listIgnoreType.contains(tableType)) {
+
 			} else {
 				throw new Exception("Unknown Table Type: " + tableType);
 			}

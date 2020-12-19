@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.HttpStatusException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -87,7 +91,6 @@ public class ExtractorTest {
 
 	}
 
-//	@Ignore
 	@Test
 	public void testExtractAllUrl() throws Exception {
 
@@ -98,7 +101,7 @@ public class ExtractorTest {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String url;
 
-		while ((url = br.readLine()) != null) { // On parcourt tous les lignes du fichier "wikiurls.txt"
+		while ((url = br.readLine()) != null) {
 			listURLs.add(url);
 		}
 		br.close();
@@ -122,31 +125,5 @@ public class ExtractorTest {
 		}
 	}
 
-	@Ignore
-	@Test
-	public void testExtractionAllRectangulaire() throws Exception {
-		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
-		String outputDirHtml = "MesOutput" + File.separator + "wikiCSVs" + File.separator;
-		File file = new File("inputdata" + File.separator + "wikiurls.txt");
-		List<String> listURLs = new ArrayList<String>();
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		String url;
-
-		while ((url = br.readLine()) != null) { // On parcourt tous les lignes du fichier "wikiurls.txt"
-			listURLs.add(url);
-		}
-		br.close();
-
-		for (String name : listURLs) {
-			try {
-				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL2(BASE_WIKIPEDIA_URL + name);
-			} catch (HttpStatusException e) {
-				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + ": " + BASE_WIKIPEDIA_URL + name
-						+ " : " + e.getMessage());
-			} catch (Exception e) {
-				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
-			}
-		}
-	}
 
 }

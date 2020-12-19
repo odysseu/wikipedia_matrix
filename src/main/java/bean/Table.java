@@ -59,7 +59,7 @@ public class Table {
 	public int getNbCol() {
 		int nbCol = 0;
 
-		for (String[] strings : lines) {
+		for (String[] strings : this.lines) {
 			int size = strings.length;
 
 			if (nbCol < size) {
