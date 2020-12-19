@@ -33,7 +33,6 @@ public class ExtractorTest {
 		assertEquals("Type", table1.get(0, 5));
 		assertEquals("Ipfirewall, PF", table1.get(3, 6));
 		assertEquals("Can keep RTC in UT[2]", table1.get(0, 15));
-		CsvWriter.writeCsvFromTable(table1, "Comparison_of_operating_system_kernels");
 	}
 
 	@Test
