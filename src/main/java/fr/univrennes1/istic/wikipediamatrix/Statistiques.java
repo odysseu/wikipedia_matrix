@@ -1,9 +1,6 @@
 package fr.univrennes1.istic.wikipediamatrix;
 
 import java.util.List;
-import java.util.Map;
-
-import bean.Table;
 
 public class Statistiques {
 

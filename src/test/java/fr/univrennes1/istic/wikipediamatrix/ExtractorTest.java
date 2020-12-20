@@ -8,21 +8,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import org.jsoup.HttpStatusException;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import bean.Table;
@@ -175,21 +166,22 @@ public class ExtractorTest {
 				mapTableColumnsNames.put(columnName, occurColumnName + 1);
 			}
 		}
-		forFile.append("ColonneMin: " + Statistiques.min(listColumns) + "\n");
-		forFile.append("ColonneMax: " + Statistiques.max(listColumns) + "\n");
-		forFile.append("Colonnemoy: " + Statistiques.mean(listColumns) + "\n");
-		forFile.append("ColonneStd: " + Statistiques.std(listColumns) + "\n");
+
+		forFile.append("Colonne Min: " + Statistiques.min(listColumns) + "\n");
+		forFile.append("Colonne Max: " + Statistiques.max(listColumns) + "\n");
+		forFile.append("Colonne moy: " + Statistiques.mean(listColumns) + "\n");
+		forFile.append("Colonne Std: " + Statistiques.std(listColumns) + "\n");
 		forFile.append("\n" + "\n");
-		forFile.append("LigneMin: " + Statistiques.min(listRows) + "\n");
-		forFile.append("LigneMax: " + Statistiques.max(listRows) + "\n");
-		forFile.append("Lignemoy: " + Statistiques.mean(listRows) + "\n");
-		forFile.append("LigneStd: " + Statistiques.std(listRows) + "\n");
+		forFile.append("Ligne Min: " + Statistiques.min(listRows) + "\n");
+		forFile.append("Ligne Max: " + Statistiques.max(listRows) + "\n");
+		forFile.append("Ligne moy: " + Statistiques.mean(listRows) + "\n");
+		forFile.append("Ligne Std: " + Statistiques.std(listRows) + "\n");
 		forFile.append("\n" + "\n");
-		forFile.append("TableTypes: " + mapTableTypes + "\n");
+		forFile.append("TableTypes registered: " + mapTableTypes + "\n" + "\n");
 		forFile.append("Relevant table types: " + WikipediaHTMLExtractor.listRelevantType.size() + "\n");
-		forFile.append("Ignored table types: " + WikipediaHTMLExtractor.listIgnoreType.size() + "\n");
-		int n = 32;
-		forFile.append("Number of differents column names: " + mapTableColumnsNames.size() + "\n");
+		forFile.append("Ignored table types: " + WikipediaHTMLExtractor.listIgnoreType.size() + "\n" + "\n");
+		int n = 30;
+		forFile.append("Number of different column names: " + mapTableColumnsNames.size() + "\n" + "\n");
 		List<Entry<String, Integer>> topNColumns = findTopNColumns(n, mapTableColumnsNames);
 		forFile.append("The top " + n + " most used columns are: " + "\n");
 		for (Entry<String, Integer> string : topNColumns) {
