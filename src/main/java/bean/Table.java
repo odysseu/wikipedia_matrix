@@ -6,6 +6,7 @@ import java.util.List;
 public class Table {
 
 	private List<String[]> lines = new ArrayList<String[]>();
+	private String tableType;
 
 	public List<String[]> getLines() {
 		return this.lines;
@@ -102,6 +103,16 @@ public class Table {
 		sb.append("]");
 
 		return sb.toString();
+	}
+
+	public String getTableType() {
+		return this.tableType;
+
+	}
+
+	public void setTableType(String tableType) {
+		this.tableType = tableType;
+
 	}
 
 }

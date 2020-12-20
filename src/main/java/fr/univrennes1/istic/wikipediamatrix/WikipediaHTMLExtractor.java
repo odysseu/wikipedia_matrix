@@ -77,9 +77,10 @@ public class WikipediaHTMLExtractor {
 			"box-Importance-section plainlinks metadata ambox ambox-content ambox-importance-section",
 			"nowraplinks navbox-inner", "navbox mw-collapsible autocollapse" };
 
+	static List<String> listIgnoreType = Arrays.asList(ignoreType);
+	static List<String> listRelevantType = Arrays.asList(relevantType);
+
 	public static List<Table> extractComplexlyFromURL(String url) throws Exception {
-		List<String> listIgnoreType = Arrays.asList(ignoreType);
-		List<String> listRelevantType = Arrays.asList(relevantType);
 		Document doc = Jsoup.connect(url).get();
 		List<Table> res = new ArrayList<Table>();
 		Elements tables = doc.select("table");

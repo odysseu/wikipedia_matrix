@@ -10,9 +10,9 @@ import org.jsoup.select.Elements;
 import bean.Table;
 
 public class ParseWikitable {
-	
+
 	static List<String> listRelevantType = Arrays.asList(WikipediaHTMLExtractor.relevantType);
-	
+
 	public static boolean isContainedInAnotherTable(Element htmltable) {
 		for (Element elt : htmltable.parents()) {
 			if (elt.tagName().equals("table") && listRelevantType.contains(elt.className()))
@@ -23,17 +23,17 @@ public class ParseWikitable {
 
 	public static Table parseComplexTable(Element htmltable) {
 		Table tableau = new Table();
+		String tableType = htmltable.className();
+		tableau.setTableType(tableType);
 		try {
-			List<Element> trs = getChildAtSameLevel(htmltable,"tr");
-			
+			List<Element> trs = getChildAtSameLevel(htmltable, "tr");
+
 			int currentRaw = 0;
 
 			for (Element tr : trs) {
 				int currentCol = 0;
-				//Elements cellules = tr.select("td,th"); //,table TODO: gerer les tables dans les tables par iterations?
-
-				String[] tags = {"td","th"};
-				List<Element> cellules = getChildAtSameLevel(tr,tags);
+				String[] tags = { "td", "th" };
+				List<Element> cellules = getChildAtSameLevel(tr, tags);
 				for (Element tdOuTh : cellules) {
 					int colSpan = Integer.valueOf(tdOuTh.hasAttr("colspan") ? tdOuTh.attr("colspan") : "1");
 
@@ -76,17 +76,16 @@ public class ParseWikitable {
 		return trs;
 	}
 
-	private static List<Element> getChildAtSameLevel(Element htmltable,String tagName) {
+	private static List<Element> getChildAtSameLevel(Element htmltable, String tagName) {
 		Element firstLine = htmltable.selectFirst(tagName);
 		Elements siblings = firstLine.siblingElements();
 		List<Element> trs = new ArrayList<Element>();
 		trs.add(firstLine);
 		for (Element element : siblings) {
-			if(element.tagName().equals(tagName))
+			if (element.tagName().equals(tagName))
 				trs.add(element);
 		}
 		return trs;
 	}
-
 
 }

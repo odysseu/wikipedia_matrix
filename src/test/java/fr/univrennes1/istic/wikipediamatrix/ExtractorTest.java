@@ -6,8 +6,16 @@ import static org.junit.Assert.assertTrue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -94,7 +102,7 @@ public class ExtractorTest {
 	public void testExtractAllUrl() throws Exception {
 
 		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
-		String outputDirHtml = "MesOutput" + File.separator + "wikiCSVs" + File.separator;
+		String outputDirHtml = "target" + File.separator + "wikiCSVs" + File.separator;
 		File file = new File("inputdata" + File.separator + "wikiurls.txt");
 		List<String> listURLs = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(file));
@@ -124,5 +132,89 @@ public class ExtractorTest {
 		}
 	}
 
+	@Test
+	public void stats() throws Exception {
+		File statsFile = new File("target" + File.separator + "statistics.txt");
+		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
+		File file = new File("inputdata" + File.separator + "wikiurls.txt");
+		List<String> listURLs = new ArrayList<String>();
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		StringBuilder forFile = new StringBuilder();
+		String url;
 
+		while ((url = br.readLine()) != null) {
+			listURLs.add(url);
+		}
+		br.close();
+		List<Table> allTables = new ArrayList<Table>();
+
+		for (String name : listURLs) {
+			try {
+				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
+				allTables.addAll(listTables);
+			} catch (HttpStatusException e) {
+				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + ": " + BASE_WIKIPEDIA_URL + name
+						+ " : " + e.getMessage());
+			} catch (Exception e) {
+				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
+			}
+		}
+
+		List<Integer> listColumns = new ArrayList<Integer>();
+		List<Integer> listRows = new ArrayList<Integer>();
+		Map<String, Integer> mapTableTypes = new HashMap<String, Integer>();
+		Map<String, Integer> mapTableColumnsNames = new HashMap<String, Integer>();
+		for (Table table : allTables) {
+			listColumns.add(table.getNbCol());
+			listRows.add(table.getNbRaw());
+			Integer occur = mapTableTypes.getOrDefault(table.getTableType(), 0);
+			mapTableTypes.put(table.getTableType(), occur + 1);
+			for (int i = 0; i < table.getNbCol(); i++) {
+				String columnName = table.get(0, i);
+				Integer occurColumnName = mapTableColumnsNames.getOrDefault(columnName, 0);
+				mapTableColumnsNames.put(columnName, occurColumnName + 1);
+			}
+		}
+		forFile.append("ColonneMin: " + Statistiques.min(listColumns) + "\n");
+		forFile.append("ColonneMax: " + Statistiques.max(listColumns) + "\n");
+		forFile.append("Colonnemoy: " + Statistiques.mean(listColumns) + "\n");
+		forFile.append("ColonneStd: " + Statistiques.std(listColumns) + "\n");
+		forFile.append("\n" + "\n");
+		forFile.append("LigneMin: " + Statistiques.min(listRows) + "\n");
+		forFile.append("LigneMax: " + Statistiques.max(listRows) + "\n");
+		forFile.append("Lignemoy: " + Statistiques.mean(listRows) + "\n");
+		forFile.append("LigneStd: " + Statistiques.std(listRows) + "\n");
+		forFile.append("\n" + "\n");
+		forFile.append("TableTypes: " + mapTableTypes + "\n");
+		forFile.append("Relevant table types: " + WikipediaHTMLExtractor.listRelevantType.size() + "\n");
+		forFile.append("Ignored table types: " + WikipediaHTMLExtractor.listIgnoreType.size() + "\n");
+		int n = 32;
+		forFile.append("Number of differents column names: " + mapTableColumnsNames.size() + "\n");
+		List<Entry<String, Integer>> topNColumns = findTopNColumns(n, mapTableColumnsNames);
+		forFile.append("The top " + n + " most used columns are: " + "\n");
+		for (Entry<String, Integer> string : topNColumns) {
+			forFile.append("-> '" + string.getKey() + "' (" + string.getValue() + " occurences)" + "\n");
+		}
+
+		FileWriter fw = new FileWriter(statsFile);
+		fw.write(forFile.toString());
+		fw.close();
+		System.out.println("Statistics file generated at : " + statsFile.getAbsolutePath());
+
+	}
+
+	private List<Entry<String, Integer>> findTopNColumns(int n, Map<String, Integer> mapTableColumnsNames) {
+		List<Entry<String, Integer>> res = new ArrayList<Entry<String, Integer>>();
+		while (res.size() < n && mapTableColumnsNames.size() > 0) {
+
+			Entry<String, Integer> ColumnMax = mapTableColumnsNames.entrySet().iterator().next();
+			for (Entry<String, Integer> col : mapTableColumnsNames.entrySet()) {
+				if (ColumnMax.getValue() < col.getValue())
+					ColumnMax = col;
+			}
+			mapTableColumnsNames.remove(ColumnMax.getKey());
+			res.add(ColumnMax);
+		}
+		return res;
+	}
 }
