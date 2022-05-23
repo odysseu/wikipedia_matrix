@@ -16,7 +16,7 @@ on:
 
 jobs:
   analyze:
-    name: Analyze java code for ubuntu
+    name: Analyze ${{matrix.laguage}} code for ${{matrix.os}}
     runs-on: ${{matrix.os}}
     permissions:
       actions: read
