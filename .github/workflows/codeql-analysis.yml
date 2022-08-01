@@ -17,6 +17,7 @@ on:
 jobs:
   analyze:
     name: Analyze ${{matrix.laguage}} code for ${{matrix.os}}
+    # Will analyse code for each jobs.analyse.strategy.matrix.os
     runs-on: ${{matrix.os}}
     permissions:
       actions: read
@@ -29,7 +30,7 @@ jobs:
       matrix:
         language: [ 'java' ]
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
-        os : [ubuntu-latest, ubuntu-16.04, windows-latest]
+        os : [ubuntu-latest, windows-latest]
 
     steps:
     - name: Checkout repository
