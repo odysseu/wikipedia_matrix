@@ -21,7 +21,7 @@ import bean.Table;
 public class ExtractorTest {
 
 	@Test
-	public void testExtraction() throws Exception {
+	public void testExtraction_known_few_values() throws Exception {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_operating_system_kernels";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
 		assertTrue(list.size() == 15);
@@ -35,7 +35,7 @@ public class ExtractorTest {
 	}
 
 	@Test
-	public void testExtraction2() throws Exception {
+	public void testExtraction_known_rectangular() throws Exception {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
 		assertTrue(list.size() == 8);
@@ -47,7 +47,7 @@ public class ExtractorTest {
 	}
 
 	@Test
-	public void testExtraction3() throws Exception {
+	public void testExtraction_known_more_values() throws Exception {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
 		Table table1 = list.get(7);
