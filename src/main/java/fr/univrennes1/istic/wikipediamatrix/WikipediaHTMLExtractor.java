@@ -17,6 +17,7 @@ public class WikipediaHTMLExtractor {
 			"wikitable sortable collapsible", "wikitable sortable plainrowheaders", "wikitable sortable filterable",
 			"wikitable center", "multicol", "infobox wikitable" };
 	public static String[] ignoreType = {
+			"sidebar nomobile nowraplinks hlist",
 			"sidebar nomobile nowraplinks",
 			"wikitable wraplinks",
 			"sidebar sidebar-collapse nomobile nowraplinks hlist",
