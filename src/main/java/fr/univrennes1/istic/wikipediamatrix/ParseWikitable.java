@@ -64,28 +64,32 @@ public class ParseWikitable {
 		String selector = String.join(",", tags);
 
 		Element firstLine = htmltable.selectFirst(selector);
-		Elements siblings = firstLine.siblingElements();
-		List<Element> trs = new ArrayList<Element>();
-		trs.add(firstLine);
-		for (Element element : siblings) {
-			for (String tag : tags) {
-				if (element.tagName().equals(tag))
-					trs.add(element);
+		if not (firstLine.equals(null)){
+			Elements siblings = firstLine.siblingElements();
+			List<Element> trs = new ArrayList<Element>();
+			trs.add(firstLine);
+			for (Element element : siblings) {
+				for (String tag : tags) {
+					if (element.tagName().equals(tag))
+						trs.add(element);
+				}
 			}
+			return trs;
 		}
-		return trs;
 	}
 
 	private static List<Element> getChildAtSameLevel(Element htmltable, String tagName) {
 		Element firstLine = htmltable.selectFirst(tagName);
-		Elements siblings = firstLine.siblingElements();
-		List<Element> trs = new ArrayList<Element>();
-		trs.add(firstLine);
-		for (Element element : siblings) {
-			if (element.tagName().equals(tagName))
-				trs.add(element);
+		if not (firstLine.equals(null)){
+			Elements siblings = firstLine.siblingElements();
+			List<Element> trs = new ArrayList<Element>();
+			trs.add(firstLine);
+			for (Element element : siblings) {
+				if (element.tagName().equals(tagName))
+					trs.add(element);
+			}
+			return trs;
 		}
-		return trs;
 	}
 
 }
