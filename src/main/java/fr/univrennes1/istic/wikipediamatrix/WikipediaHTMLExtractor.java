@@ -22,6 +22,7 @@ public class WikipediaHTMLExtractor {
 			"wikitable wraplinks",
 			"sidebar sidebar-collapse nomobile nowraplinks hlist",
 			"sidebar sidebar-collapse nomobile nowraplinks",
+			"box-Cleanup-lang plainlinks metadata ambox ambox-style",
 			"box-Multiple_issues plainlinks metadata ambox ambox-content ambox-multiple_issues compact-ambox",
 			"box-Weasel plainlinks metadata ambox ambox-content ambox-Weasel",
 			"box-More_citations_needed plainlinks metadata ambox ambox-content ambox-Refimprove",
