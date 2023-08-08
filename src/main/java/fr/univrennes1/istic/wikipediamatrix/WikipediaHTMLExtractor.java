@@ -12,7 +12,7 @@ import org.jsoup.select.Elements;
 import bean.Table;
 
 public class WikipediaHTMLExtractor {
-	public static String[] relevantType = { "sortable wikitable", "wikitable", "wikitable sortable",
+	public static String[] relevantType = { "wikipedia", "sortable wikitable", "wikitable", "wikitable sortable",
 			"wikitable sortable mw-collapsible", "wikitable mw-collapsible mw-collapsed",
 			"wikitable sortable collapsible", "wikitable sortable plainrowheaders", "wikitable sortable filterable",
 			"wikitable center", "multicol", "infobox wikitable", "wikitable sortable mw-collapsible mw-collapsed", "vgr-aggregators wikitable mw-collapsible-content", "vgr-reviews wikitable mw-collapsible-content", "vgr-awards wikitable mw-collapsible-content" };
