@@ -75,6 +75,7 @@ public class ParseWikitable {
 				}
 			}
 		}
+		System.err.println("WARNING : HTML table " + htmltable + " has no subtags." + tags);
 		return trs;
 	}
 
