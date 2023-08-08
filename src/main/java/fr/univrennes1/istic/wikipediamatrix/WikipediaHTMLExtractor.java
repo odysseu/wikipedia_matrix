@@ -18,6 +18,8 @@ public class WikipediaHTMLExtractor {
 			"wikitable center", "multicol", "infobox wikitable", "wikitable sortable mw-collapsible mw-collapsed", "vgr-aggregators wikitable mw-collapsible-content", "vgr-reviews wikitable mw-collapsible-content", "vgr-awards wikitable mw-collapsible-content",
 			"sortable wikitable plainrowheaders" };
 	public static String[] ignoreType = {
+			"plainlinks fmbox fmbox-system",
+			"box-RfD plainlinks metadata ambox ambox-delete",
 			"box-Lead_missing plainlinks metadata ambox ambox-content ambox-lead_missing",
 			"box-Condense plainlinks metadata ambox ambox-style ambox-condense",
 			"plainlinks metadata ambox ambox-move",
