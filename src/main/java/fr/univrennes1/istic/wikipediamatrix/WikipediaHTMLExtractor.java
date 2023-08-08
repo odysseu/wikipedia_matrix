@@ -18,6 +18,7 @@ public class WikipediaHTMLExtractor {
 			"wikitable center", "multicol", "infobox wikitable", "wikitable sortable mw-collapsible mw-collapsed", "vgr-aggregators wikitable mw-collapsible-content", "vgr-reviews wikitable mw-collapsible-content", "vgr-awards wikitable mw-collapsible-content",
 			"sortable wikitable plainrowheaders" };
 	public static String[] ignoreType = {
+			"box-Overcoloured plainlinks metadata ambox ambox-style",
 			"box-Importance_section plainlinks metadata ambox ambox-content",
 			"box-Overly_detailed plainlinks metadata ambox ambox-style ambox-overly_detailed",
 			"sidebar nomobile hlist",
