@@ -138,13 +138,13 @@ public class ExtractorTest {
 		}
 		br.close();
 		List<Table> allTables = new ArrayList<Table>();
-
+		int ArrayList_size = listURLs.size()
 		for (String name : listURLs) {
 			try {
 				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
 				allTables.addAll(listTables);
 			} catch (HttpStatusException e) {
-				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + ": " + BASE_WIKIPEDIA_URL + name
+				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + "/" + ArrayList_size + ": " + BASE_WIKIPEDIA_URL + name
 						+ " : " + e.getMessage());
 			} catch (Exception e) {
 				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
