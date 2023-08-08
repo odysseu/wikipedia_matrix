@@ -64,9 +64,9 @@ public class ParseWikitable {
 		String selector = String.join(",", tags);
 
 		Element firstLine = htmltable.selectFirst(selector);
+		List<Element> trs = new ArrayList<Element>();
 		if (firstLine != null){
 			Elements siblings = firstLine.siblingElements();
-			List<Element> trs = new ArrayList<Element>();
 			trs.add(firstLine);
 			for (Element element : siblings) {
 				for (String tag : tags) {
@@ -74,22 +74,22 @@ public class ParseWikitable {
 						trs.add(element);
 				}
 			}
-			return trs;
 		}
+		return trs;
 	}
 
 	private static List<Element> getChildAtSameLevel(Element htmltable, String tagName) {
 		Element firstLine = htmltable.selectFirst(tagName);
+		List<Element> trs = new ArrayList<Element>();
 		if (firstLine != null){
 			Elements siblings = firstLine.siblingElements();
-			List<Element> trs = new ArrayList<Element>();
 			trs.add(firstLine);
 			for (Element element : siblings) {
 				if (element.tagName().equals(tagName))
 					trs.add(element);
 			}
-			return trs;
 		}
+		return trs;
 	}
 
 }
