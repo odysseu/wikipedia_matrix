@@ -15,7 +15,8 @@ public class WikipediaHTMLExtractor {
 	public static String[] relevantType = { "wikipedia", "sortable wikitable", "wikitable", "wikitable sortable",
 			"wikitable sortable mw-collapsible", "wikitable mw-collapsible mw-collapsed",
 			"wikitable sortable collapsible", "wikitable sortable plainrowheaders", "wikitable sortable filterable",
-			"wikitable center", "multicol", "infobox wikitable", "wikitable sortable mw-collapsible mw-collapsed", "vgr-aggregators wikitable mw-collapsible-content", "vgr-reviews wikitable mw-collapsible-content", "vgr-awards wikitable mw-collapsible-content" };
+			"wikitable center", "multicol", "infobox wikitable", "wikitable sortable mw-collapsible mw-collapsed", "vgr-aggregators wikitable mw-collapsible-content", "vgr-reviews wikitable mw-collapsible-content", "vgr-awards wikitable mw-collapsible-content",
+			"sortable wikitable plainrowheaders" };
 	public static String[] ignoreType = {
 			"box-Lead_missing plainlinks metadata ambox ambox-content ambox-lead_missing",
 			"box-Condense plainlinks metadata ambox ambox-style ambox-condense",
