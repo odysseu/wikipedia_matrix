@@ -64,7 +64,7 @@ public class ParseWikitable {
 		String selector = String.join(",", tags);
 
 		Element firstLine = htmltable.selectFirst(selector);
-		if not (firstLine.equals(null)){
+		if (firstLine.equals != null){
 			Elements siblings = firstLine.siblingElements();
 			List<Element> trs = new ArrayList<Element>();
 			trs.add(firstLine);
@@ -80,7 +80,7 @@ public class ParseWikitable {
 
 	private static List<Element> getChildAtSameLevel(Element htmltable, String tagName) {
 		Element firstLine = htmltable.selectFirst(tagName);
-		if not (firstLine.equals(null)){
+		if (firstLine.equals != null){
 			Elements siblings = firstLine.siblingElements();
 			List<Element> trs = new ArrayList<Element>();
 			trs.add(firstLine);
