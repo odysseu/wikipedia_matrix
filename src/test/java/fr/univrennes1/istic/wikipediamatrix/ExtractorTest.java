@@ -143,8 +143,7 @@ public class ExtractorTest {
 			try {
 				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
 				allTables.addAll(listTables);
-				System.err.println("Ok for url : " + listURLs.indexOf(name) + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name
-						+ ") : " + e.getMessage());
+				System.err.println("Ok for url : " + listURLs.indexOf(name) + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name + ")");
 			} catch (HttpStatusException e) {
 				System.err.println("Ignoring url " + listURLs.indexOf(name) + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name
 						+ ") : " + e.getMessage());
