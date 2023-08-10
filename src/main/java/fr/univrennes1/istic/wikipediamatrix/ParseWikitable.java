@@ -76,7 +76,9 @@ public class ParseWikitable {
 					}
 				}
 			} catch (Exception e) {
-			System.err.println("Il y n'y a pas de <td> ou de <th>");
+			System.err.println("Selector is " + selector)
+			System.err.println("firstLine of html is : " + htmltable.selectFirst(selector))
+			System.err.println("There were no <td> nor <th>");
 			e.printStackTrace();
 			return null;
 			}
