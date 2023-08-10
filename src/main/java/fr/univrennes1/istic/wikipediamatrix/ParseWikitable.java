@@ -54,6 +54,7 @@ public class ParseWikitable {
 			}
 			return tableau;
 		} catch (Exception e) {
+			System.err.println("Table type where problem appeared is : " + tableau.getTableType());
 			e.printStackTrace();
 			return null;
 		}
@@ -80,6 +81,7 @@ public class ParseWikitable {
 	}
 
 	private static List<Element> getChildAtSameLevel(Element htmltable, String tagName) {
+		System.err.println("WARNING : using other single-tag function");
 		Element firstLine = htmltable.selectFirst(tagName);
 		List<Element> trs = new ArrayList<Element>();
 		if (firstLine != null){
