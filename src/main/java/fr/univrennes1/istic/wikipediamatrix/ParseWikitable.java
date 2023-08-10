@@ -66,7 +66,7 @@ public class ParseWikitable {
 		Element firstLine = htmltable.selectFirst(selector);
 		List<Element> trs = new ArrayList<Element>();
 		if (firstLine != null){
-			System.err.println("OK: HTML table has subtags.");
+			// System.err.println("OK: HTML table has subtags.");
 			Elements siblings = firstLine.siblingElements();
 			trs.add(firstLine);
 			for (Element element : siblings) {
