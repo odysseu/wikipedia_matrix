@@ -61,38 +61,69 @@ public class ParseWikitable {
 	}
 
 	private static List<Element> getChildAtSameLevel(Element htmltable, String[] tags) {
-
+	// System.err.println("WARNING : using other single-tag function");
 		String selector = String.join(",", tags);
-
-		Element firstLine = htmltable.selectFirst(selector);
-		List<Element> trs = new ArrayList<Element>();
-		if (firstLine != null){
-			// System.err.println("OK: HTML table has subtags.");
-			Elements siblings = firstLine.siblingElements();
-			trs.add(firstLine);
-			for (Element element : siblings) {
-				for (String tag : tags) {
-					if (element.tagName().equals(tag))
-						trs.add(element);
+		try	{
+			Element firstLine = htmltable.selectFirst(selector);
+			List<Element> trs = new ArrayList<Element>();
+			try{
+				Elements siblings = firstLine.siblingElements();
+				trs.add(firstLine);
+				for (Element sibling : siblings) {
+					for (String tag : tags) {
+						if (sibling.tagName().equals(tag))
+							trs.add(sibling);
+					}
 				}
+			} catch (Exception e) {
+			System.err.println("Il y n'y a pas de <td> ou de <th>");
+			e.printStackTrace();
+			return null;
 			}
+			return trs;
+		} catch (Exception e) {
+			System.err.println("HTML table where problem appeared is : " + htmltable);
+			e.printStackTrace();
+			return null;
 		}
-		return trs;
 	}
 
-	private static List<Element> getChildAtSameLevel(Element htmltable, String tagName) {
-		System.err.println("WARNING : using other single-tag function");
-		Element firstLine = htmltable.selectFirst(tagName);
-		List<Element> trs = new ArrayList<Element>();
-		if (firstLine != null){
-			Elements siblings = firstLine.siblingElements();
-			trs.add(firstLine);
-			for (Element element : siblings) {
-				if (element.tagName().equals(tagName))
-					trs.add(element);
+private static List<Element> getChildAtSameLevel(Element htmltable, String tagName) {
+		try	{
+			Element firstLine = htmltable.selectFirst(tagName);
+			List<Element> trs = new ArrayList<Element>();
+			try{
+				Elements siblings = firstLine.siblingElements();
+				trs.add(firstLine);
+				for (Element sibling : siblings) {
+					if (sibling.tagName().equals(tagName))
+						trs.add(sibling);
+				}
+			} catch (Exception e) {
+			System.err.println("Il y n'y a pas de <tr>");
+			e.printStackTrace();
+			return null;
 			}
+			return trs;
+		} catch (Exception e) {
+			System.err.println("HTML table where problem appeared is : " + htmltable);
+			e.printStackTrace();
+			return null;
 		}
-		return trs;
 	}
+
+//	private static List<Element> getChildAtSameLevel(Element htmltable, String tagName) {
+//		Element firstLine = htmltable.selectFirst(tagName);
+//		List<Element> trs = new ArrayList<Element>();
+//		if (firstLine != null){
+//			Elements siblings = firstLine.siblingElements();
+//			trs.add(firstLine);
+//			for (Element sibling : siblings) {
+//				if (sibling.tagName().equals(tagName))
+//					trs.add(sibling);
+//			}
+//		}
+//		return trs;
+//	}
 
 }
