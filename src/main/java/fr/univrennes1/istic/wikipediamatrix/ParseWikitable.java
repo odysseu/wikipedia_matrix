@@ -25,47 +25,52 @@ public class ParseWikitable {
 		Table tableau = new Table();
 		String tableType = htmltable.className();
 		tableau.setTableType(tableType);
-		try {
-			List<Element> trs = getChildAtSameLevel(htmltable, "tr");
+    try {
+        List<Element> trs = getChildAtSameLevel(htmltable, "tr");
+        int currentRaw = 0;
 
-			int currentRaw = 0;
+        for (Element tr : trs) {
+            int currentCol = 0;
+            String[] tags = { "td", "th" };
+            List<Element> cells = getChildAtSameLevel(tr, tags);
 
-			for (Element tr : trs) {
-				int currentCol = 0;
-				String[] tags = { "td", "th" };
-				List<Element> cells = getChildAtSameLevel(tr, tags);
-				for (Element tdOrTh : cells) {
-					try {
-						String colSpanContent = tdOrTh.hasAttr("colspan") ? tdOrTh.attr("colspan") : "1";
-						int colSpan = Integer.valueOf(colSpanContent);
-					} catch (Exception e) {
-						System.err.println("td of th has no colspan : " + tdOrTh);
-						e.printStackTrace();
-						return null;
-					}
+            for (Element tdOrTh : cells) {
+                int colSpan = 1;
+                try {
+                    String colSpanContent = tdOrTh.hasAttr("colspan") ? tdOrTh.attr("colspan") : "1";
+                    colSpan = Integer.parseInt(colSpanContent);
+                } catch (NumberFormatException e) {
+                    System.err.println("td or th has an invalid colspan: " + tdOrTh);
+                    e.printStackTrace();
+                }
+                int rawSpan = 1;
+                try {
+                    String rawSpanContent = tdOrTh.hasAttr("rowspan") ? tdOrTh.attr("rowspan") : "1";
+                    rawSpan = Integer.parseInt(rawSpanContent);
+                } catch (NumberFormatException e) {
+                    System.err.println("td or th has an invalid rowspan: " + tdOrTh);
+                    e.printStackTrace();
+                }
 
-					for (int j = 0; j < colSpan; j++) {
-						int rawSpan = Integer.valueOf(tdOrTh.hasAttr("rowspan") ? tdOrTh.attr("rowspan") : "1");
+                for (int h = 0; h < rawSpan; h++) {
+                    while (tableau.get(currentRaw + h, currentCol) != null) {
+                        currentCol++;
+                    }
+                    tableau.set(currentRaw + h, currentCol, tdOrTh.text());
+                }
+                currentCol += colSpan;
+            }
+            currentRaw++;
+        }
 
-						for (int h = 0; h < rawSpan; h++) {
+        return tableau;
+    } catch (Exception e) {
+        System.err.println("Table type where problem appeared is : " + tableau.getTableType());
+        e.printStackTrace();
+        return null;
+    }
+}
 
-							while (tableau.get(currentRaw + h, currentCol + j) != null) {
-								currentCol = currentCol + 1;
-							}
-							tableau.set(currentRaw + h, currentCol + j, tdOrTh.text());
-						}
-					}
-					currentCol = currentCol + 1;
-				}
-				currentRaw = currentRaw + 1;
-			}
-			return tableau;
-		} catch (Exception e) {
-			System.err.println("Table type where problem appeared is : " + tableau.getTableType());
-			e.printStackTrace();
-			return null;
-		}
-	}
 
 
 	private static List<Element> getChildAtSameLevel(Element htmltable, String[] tags) {
