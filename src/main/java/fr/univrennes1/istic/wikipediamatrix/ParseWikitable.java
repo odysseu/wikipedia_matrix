@@ -33,19 +33,26 @@ public class ParseWikitable {
 			for (Element tr : trs) {
 				int currentCol = 0;
 				String[] tags = { "td", "th" };
-				List<Element> cellules = getChildAtSameLevel(tr, tags);
-				for (Element tdOuTh : cellules) {
-					int colSpan = Integer.valueOf(tdOuTh.hasAttr("colspan") ? tdOuTh.attr("colspan") : "1");
+				List<Element> cells = getChildAtSameLevel(tr, tags);
+				for (Element tdOrTh : cells) {
+					try {
+						String colSpanContent = tdOrTh.hasAttr("colspan") ? tdOrTh.attr("colspan") : "1";
+						int colSpan = Integer.valueOf(colSpanContent);
+					} catch (Exception e) {
+						System.err.println("td of th has no colspan : " + tdOrTh);
+						e.printStackTrace();
+						return null;
+					}
 
 					for (int j = 0; j < colSpan; j++) {
-						int rawSpan = Integer.valueOf(tdOuTh.hasAttr("rowspan") ? tdOuTh.attr("rowspan") : "1");
+						int rawSpan = Integer.valueOf(tdOrTh.hasAttr("rowspan") ? tdOrTh.attr("rowspan") : "1");
 
 						for (int h = 0; h < rawSpan; h++) {
 
 							while (tableau.get(currentRaw + h, currentCol + j) != null) {
 								currentCol = currentCol + 1;
 							}
-							tableau.set(currentRaw + h, currentCol + j, tdOuTh.text());
+							tableau.set(currentRaw + h, currentCol + j, tdOrTh.text());
 						}
 					}
 					currentCol = currentCol + 1;
