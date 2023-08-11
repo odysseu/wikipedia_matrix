@@ -3,6 +3,8 @@ package fr.univrennes1.istic.wikipediamatrix;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -21,6 +23,24 @@ public class ParseWikitable {
 		return false;
 	}
 
+	public static int findNumberInTdOrTh(Element tdOrTh, String tableColOrRow){
+		try {
+			String tableColOrRowContent = tdOrTh.hasAttr("tableColOrRow") ? tdOrTh.attr("tableColOrRow") : "1";
+			Pattern pattern = Pattern.compile("\\d+");
+			Matcher matcher = pattern.matcher(tableColOrRowContent);
+			if(matcher.find()){
+				String extractedNumber = matcher.group();
+				int tableColOrRowNumber = Integer.parseInt(extractedNumber);
+				return tableColOrRowNumber;
+			} else {
+				return 1;
+			}
+		} catch (NumberFormatException e) {
+			System.err.println("td or th has an invalid " + tableColOrRow + ", there should be number inside: " + tdOrTh);
+			e.printStackTrace();
+		}
+	}
+
 	public static Table parseComplexTable(Element htmltable) {
 		Table tableau = new Table();
 		String tableType = htmltable.className();
@@ -35,22 +55,8 @@ public class ParseWikitable {
             List<Element> cells = getChildAtSameLevel(tr, tags);
 
             for (Element tdOrTh : cells) {
-                int colSpan = 1;
-                try {
-                    String colSpanContent = tdOrTh.hasAttr("colspan") ? tdOrTh.attr("colspan") : "1";
-                    colSpan = Integer.parseInt(colSpanContent);
-                } catch (NumberFormatException e) {
-                    System.err.println("td or th has an invalid colspan: " + tdOrTh);
-                    e.printStackTrace();
-                }
-                int rawSpan = 1;
-                try {
-                    String rawSpanContent = tdOrTh.hasAttr("rowspan") ? tdOrTh.attr("rowspan") : "1";
-                    rawSpan = Integer.parseInt(rawSpanContent);
-                } catch (NumberFormatException e) {
-                    System.err.println("td or th has an invalid rowspan: " + tdOrTh);
-                    e.printStackTrace();
-                }
+                int colSpan = findNumberInTdOrTh(tdOrTh, "colspan");
+                int rawSpan = findNumberInTdOrTh(tdOrTh, "rowspan");
 
                 for (int h = 0; h < rawSpan; h++) {
                     while (tableau.get(currentRaw + h, currentCol) != null) {
