@@ -60,30 +60,30 @@ public class ParseWikitable {
 		}
 	}
 
+
 	private static List<Element> getChildAtSameLevel(Element htmltable, String[] tags) {
-	// System.err.println("WARNING : using other single-tag function");
 		String selector = String.join(",", tags);
-		try	{
+		try {
 			Element firstLine = htmltable.selectFirst(selector);
-			List<Element> trs = new ArrayList<Element>();
-			try{
-				Elements siblings = firstLine.siblingElements();
-				trs.add(firstLine);
-				for (Element sibling : siblings) {
-					for (String tag : tags) {
-						if (sibling.tagName().equals(tag))
-							trs.add(sibling);
+
+			if (firstLine == null) {
+				// Handle the case where no matching element was found.
+				System.err.println("No element found with selector : " + selector);
+				return new ArrayList<>(); // or return null if you prefer
+			}
+
+			List<Element> trs = new ArrayList<>();
+			Elements siblings = firstLine.siblingElements();
+			trs.add(firstLine);
+
+			for (Element sibling : siblings) {
+				for (String tag : tags) {
+					if (sibling.tagName().equals(tag)) {
+						trs.add(sibling);
 					}
 				}
-			} catch (Exception e) {
-			System.err.println("Selector is " + selector);
-			System.err.println("firstLine of html is : " + htmltable.selectFirst(selector));
-			System.err.println("firstLine for th of html is : " + htmltable.selectFirst("th"));
-			System.err.println("firstLine for td of html is : " + htmltable.selectFirst("td"));
-			System.err.println("There were no <td> nor <th>");
-			e.printStackTrace();
-			return null;
 			}
+
 			return trs;
 		} catch (Exception e) {
 			System.err.println("HTML table where problem appeared is : " + htmltable);
