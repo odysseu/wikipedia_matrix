@@ -25,19 +25,23 @@ public class ParseWikitable {
 
 	public static int findNumberInTdOrTh(Element tdOrTh, String tableColOrRow){
 		try {
-			String tableColOrRowContent = tdOrTh.hasAttr("tableColOrRow") ? tdOrTh.attr("tableColOrRow") : "1";
-			Pattern pattern = Pattern.compile("\\d+");
-			Matcher matcher = pattern.matcher(tableColOrRowContent);
-			if(matcher.find()){
-				String extractedNumber = matcher.group();
-				int tableColOrRowNumber = Integer.parseInt(extractedNumber);
-				return tableColOrRowNumber;
+			if (tdOrTh.hasAttr("tableColOrRow")){
+				String tableColOrRowContent = tdOrTh.hasAttr("tableColOrRow") ? tdOrTh.attr("tableColOrRow") : "1";
+				Pattern pattern = Pattern.compile("(\\d+)(?:data-sort-value=\"\"");
+				Matcher matcher = pattern.matcher(tableColOrRowContent);
+				if (matcher.find()) {
+					String extractedNumber = matcher.group(1);
+					int tableColOrRowNumber = Integer.parseInt(extractedNumber);
+					return tableColOrRowNumber;
+				}
+			
 			} else {
 				return 1;
 			}
 		} catch (NumberFormatException e) {
 			System.err.println("td or th has an invalid " + tableColOrRow + ", there should be number inside: " + tdOrTh);
 			e.printStackTrace();
+			return 1;
 		}
 	}
 
