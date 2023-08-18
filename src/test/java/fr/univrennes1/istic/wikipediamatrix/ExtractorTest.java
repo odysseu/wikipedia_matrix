@@ -143,15 +143,15 @@ public class ExtractorTest {
 			try {
 				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
 				allTables.addAll(listTables);
-				System.err.println("Ok for url : " + listURLs.indexOf(name) + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name + ")");
+				System.err.println("Ok for url : " + listURLs.indexOf(name) + 1 + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name + ")");
 			} catch (HttpStatusException e) {
-				System.err.println("Ignoring url " + listURLs.indexOf(name) + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name
+				System.err.println("Ignoring url " + listURLs.indexOf(name) + 1 + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name
 						+ ") : " + e.getMessage());
 			} catch (Exception e) {
 				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
 			}
 		}
-
+		System.err.println("There were " + allTables.size() + " tables found in total.");
 		List<Integer> listColumns = new ArrayList<Integer>();
 		List<Integer> listRows = new ArrayList<Integer>();
 		Map<String, Integer> mapTableTypes = new HashMap<String, Integer>();

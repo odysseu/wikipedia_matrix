@@ -135,19 +135,4 @@ private static List<Element> getChildAtSameLevel(Element htmltable, String tagNa
 			return null;
 		}
 	}
-
-//	private static List<Element> getChildAtSameLevel(Element htmltable, String tagName) {
-//		Element firstLine = htmltable.selectFirst(tagName);
-//		List<Element> trs = new ArrayList<Element>();
-//		if (firstLine != null){
-//			Elements siblings = firstLine.siblingElements();
-//			trs.add(firstLine);
-//			for (Element sibling : siblings) {
-//				if (sibling.tagName().equals(tagName))
-//					trs.add(sibling);
-//			}
-//		}
-//		return trs;
-//	}
-
 }
