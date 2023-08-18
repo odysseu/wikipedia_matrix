@@ -50,6 +50,7 @@ public class ExtractorTest {
 	public void testExtraction_known_more_values() throws Exception {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
+		System.err.println("There are " + list.size() + " tables.");
 		Table table1 = list.get(7);
 		assertTrue("table is not rectangulaire", table1.isRectangulaire());
 		assertEquals("Expected number of Raws", 3, table1.getNbRaw());
