@@ -34,10 +34,8 @@ public class ParseWikitable {
 					int tableColOrRowNumber = Integer.parseInt(extractedNumber);
 					return tableColOrRowNumber;
 				}
-			
-			} else {
-				return 1;
 			}
+			return 1;
 		} catch (NumberFormatException e) {
 			System.err.println("td or th has an invalid " + tableColOrRow + ", there should be number inside: " + tdOrTh);
 			e.printStackTrace();
