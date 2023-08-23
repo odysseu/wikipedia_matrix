@@ -21,6 +21,40 @@ import bean.Table;
 public class ExtractorTest {
 
 	@Test
+	public void testExtractAllUrl() throws Exception {
+
+		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
+		String outputDirHtml = "target" + File.separator + "wikiCSVs" + File.separator;
+		File file = new File("inputdata" + File.separator + "wikiurls.txt");
+		List<String> listURLs = new ArrayList<String>();
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		String url;
+
+		while ((url = br.readLine()) != null) {
+			listURLs.add(url);
+		}
+		br.close();
+
+		for (String name : listURLs) {
+			try {
+				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
+
+				for (int i = 0; i < listTables.size(); i++) {
+					Table table = listTables.get(i);
+					String path = outputDirHtml + name + "_" + i + ".csv";
+					CsvWriter.writeCsvFromTable(table, path);
+				}
+			} catch (HttpStatusException e) {
+				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + ": " + BASE_WIKIPEDIA_URL + name
+						+ " : " + e.getMessage());
+			} catch (Exception e) {
+				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
+			}
+
+		}
+	}
+	
+	@Test
 	public void testExtraction_known_few_values() throws Exception {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_operating_system_kernels";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
@@ -90,39 +124,6 @@ public class ExtractorTest {
 
 	}
 
-	@Test
-	public void testExtractAllUrl() throws Exception {
-
-		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
-		String outputDirHtml = "target" + File.separator + "wikiCSVs" + File.separator;
-		File file = new File("inputdata" + File.separator + "wikiurls.txt");
-		List<String> listURLs = new ArrayList<String>();
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		String url;
-
-		while ((url = br.readLine()) != null) {
-			listURLs.add(url);
-		}
-		br.close();
-
-		for (String name : listURLs) {
-			try {
-				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
-
-				for (int i = 0; i < listTables.size(); i++) {
-					Table table = listTables.get(i);
-					String path = outputDirHtml + name + "_" + i + ".csv";
-					CsvWriter.writeCsvFromTable(table, path);
-				}
-			} catch (HttpStatusException e) {
-				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + ": " + BASE_WIKIPEDIA_URL + name
-						+ " : " + e.getMessage());
-			} catch (Exception e) {
-				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
-			}
-
-		}
-	}
 
 	@Test
 	public void stats() throws Exception {
