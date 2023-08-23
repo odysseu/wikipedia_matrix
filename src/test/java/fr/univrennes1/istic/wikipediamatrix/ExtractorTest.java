@@ -53,6 +53,12 @@ public class ExtractorTest {
 
 	@Test
 	public void testExtraction_known_few_values() throws Exception {
+		try {
+			return Stream.of(new File("/home/runner/work/wikipedia_matrix/wikipedia_matrix/target" + File.separator + "wikiCSVs" + File.separator).listFiles())
+			.filter(file -> !file.isDirectory())
+			.map(File::getName)
+			.collect(Collectors.toSet());
+		}
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_operating_system_kernels";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
 		assertTrue("In url " + url + " there were " + list.size() + " tables found but there should have been 15", list.size() == 15);
