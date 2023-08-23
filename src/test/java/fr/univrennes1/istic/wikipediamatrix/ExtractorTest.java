@@ -53,12 +53,12 @@ public class ExtractorTest {
 
 		}
 	}
-	
+
 	@Test
 	public void testExtraction_known_few_values() throws Exception {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_operating_system_kernels";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
-		assertTrue(list.size() == 15);
+		assertTrue("In url " + url + " there were " + list.size() + " tables found but there should have been 15", list.size() == 15);
 		Table table1 = list.get(0);
 		assertTrue("table is not rectangulaire", table1.isRectangulaire());
 		assertEquals("Kernel name", table1.get(0, 0));
@@ -72,7 +72,7 @@ public class ExtractorTest {
 	public void testExtraction_known_rectangular() throws Exception {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
-		assertTrue(list.size() == 8);
+		assertTrue("In url " + url + " there were " + list.size() + " tables found but there should have been 8", list.size() == 8);
 		Table table1 = list.get(1);
 		assertTrue("table is not rectangulaire", table1.isRectangulaire());
 		assertEquals("Expected number of Raws", 28, table1.getNbRaw());
@@ -145,9 +145,9 @@ public class ExtractorTest {
 			try {
 				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
 				allTables.addAll(listTables);
-				System.err.println("Ok for url : " + listURLs.indexOf(name) + 1 + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name + ")");
+				System.err.println("Ok for url : " + listURLs.indexOf(name) + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name + ")");
 			} catch (HttpStatusException e) {
-				System.err.println("Ignoring url " + listURLs.indexOf(name) + 1 + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name
+				System.err.println("Ignoring url " + listURLs.indexOf(name) + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name
 						+ ") : " + e.getMessage());
 			} catch (Exception e) {
 				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
