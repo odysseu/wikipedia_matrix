@@ -24,7 +24,7 @@ public class ExtractorTest {
 	public void testExtractAllUrl() throws Exception {
 
 		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
-		String outputDirHtml = "target" + File.separator + "wikiCSVs" + File.separator;
+		String outputDirHtml = "/home/runner/work/wikipedia_matrix/wikipedia_matrix/target" + File.separator + "wikiCSVs" + File.separator;
 		File file = new File("inputdata" + File.separator + "wikiurls.txt");
 		List<String> listURLs = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(file));
@@ -47,10 +47,7 @@ public class ExtractorTest {
 			} catch (HttpStatusException e) {
 				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + ": " + BASE_WIKIPEDIA_URL + name
 						+ " : " + e.getMessage());
-			} catch (Exception e) {
-				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
 			}
-
 		}
 	}
 
@@ -147,10 +144,7 @@ public class ExtractorTest {
 				allTables.addAll(listTables);
 				System.err.println("Ok for url : " + listURLs.indexOf(name) + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name + ")");
 			} catch (HttpStatusException e) {
-				System.err.println("Ignoring url " + listURLs.indexOf(name) + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name
-						+ ") : " + e.getMessage());
-			} catch (Exception e) {
-				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
+				System.err.println("Ignoring url " + listURLs.indexOf(name) + "/" + ArrayList_size + " : " + e.getMessage());
 			}
 		}
 		System.err.println("There were " + allTables.size() + " tables found in total.");
