@@ -189,12 +189,12 @@ public class ExtractorTest {
 		fw.write(forFile.toString());
 		fw.close();
 		System.out.println("Statistics file generated at : " + statsFile.getAbsolutePath());
-		try (BufferedReader br = new BufferedReader(new FileReader(statsFile.getAbsolutePath()))) {
+		try (BufferedReader br2 = new BufferedReader(new FileReader(statsFile.getAbsolutePath()))) {
    			String line;
-   			while ((line = br.readLine()) != null) {
+   			while ((line = br2.readLine()) != null) {
      	  		System.out.println(line);
 				}
-			br.close();
+			br2.close();
 		}
 
 	}
