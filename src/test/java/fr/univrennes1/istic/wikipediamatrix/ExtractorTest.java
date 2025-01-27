@@ -21,10 +21,42 @@ import bean.Table;
 public class ExtractorTest {
 
 	@Test
+	public void testExtractAllUrl() throws Exception {
+
+		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
+		String outputDirHtml = "/home/runner/work/wikipedia_matrix/wikipedia_matrix/target" + File.separator + "wikiCSVs" + File.separator;
+		File file = new File("inputdata" + File.separator + "wikiurls.txt");
+		List<String> listURLs = new ArrayList<String>();
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		String url;
+
+		while ((url = br.readLine()) != null) {
+			listURLs.add(url);
+		}
+		br.close();
+
+		for (String name : listURLs) {
+			try {
+				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
+
+				for (int i = 0; i < listTables.size(); i++) {
+					Table table = listTables.get(i);
+					String path = outputDirHtml + name + "_" + i + ".csv";
+					CsvWriter.writeCsvFromTable(table, path);
+				}
+			} catch (HttpStatusException e) {
+				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + ": " + BASE_WIKIPEDIA_URL + name
+						+ " : " + e.getMessage());
+			}
+		}
+	}
+
+	@Test
 	public void testExtraction_known_few_values() throws Exception {
+		ListFilesInDirectory("/home/runner/work/wikipedia_matrix/wikipedia_matrix/target" + File.separator + "wikiCSVs" + File.separator);
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_operating_system_kernels";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
-		assertTrue(list.size() == 15);
+		assertTrue("In url " + url + " there were " + list.size() + " tables found but there should have been 15", list.size() == 15);
 		Table table1 = list.get(0);
 		assertTrue("table is not rectangulaire", table1.isRectangulaire());
 		assertEquals("Kernel name", table1.get(0, 0));
@@ -38,7 +70,7 @@ public class ExtractorTest {
 	public void testExtraction_known_rectangular() throws Exception {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
-		assertTrue(list.size() == 8);
+		assertTrue("In url " + url + " there were " + list.size() + " tables found but there should have been 8", list.size() == 8);
 		Table table1 = list.get(1);
 		assertTrue("table is not rectangulaire", table1.isRectangulaire());
 		assertEquals("Expected number of Raws", 28, table1.getNbRaw());
@@ -50,6 +82,7 @@ public class ExtractorTest {
 	public void testExtraction_known_more_values() throws Exception {
 		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
+		System.err.println("There are " + list.size() + " tables.");
 		Table table1 = list.get(7);
 		assertTrue("table is not rectangulaire", table1.isRectangulaire());
 		assertEquals("Expected number of Raws", 3, table1.getNbRaw());
@@ -89,39 +122,6 @@ public class ExtractorTest {
 
 	}
 
-	@Test
-	public void testExtractAllUrl() throws Exception {
-
-		String BASE_WIKIPEDIA_URL = "https://en.wikipedia.org/wiki/";
-		String outputDirHtml = "target" + File.separator + "wikiCSVs" + File.separator;
-		File file = new File("inputdata" + File.separator + "wikiurls.txt");
-		List<String> listURLs = new ArrayList<String>();
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		String url;
-
-		while ((url = br.readLine()) != null) {
-			listURLs.add(url);
-		}
-		br.close();
-
-		for (String name : listURLs) {
-			try {
-				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
-
-				for (int i = 0; i < listTables.size(); i++) {
-					Table table = listTables.get(i);
-					String path = outputDirHtml + name + "_" + i + ".csv";
-					CsvWriter.writeCsvFromTable(table, path);
-				}
-			} catch (HttpStatusException e) {
-				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + ": " + BASE_WIKIPEDIA_URL + name
-						+ " : " + e.getMessage());
-			} catch (Exception e) {
-				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
-			}
-
-		}
-	}
 
 	@Test
 	public void stats() throws Exception {
@@ -138,19 +138,17 @@ public class ExtractorTest {
 		}
 		br.close();
 		List<Table> allTables = new ArrayList<Table>();
-
+		int ArrayList_size = listURLs.size();
 		for (String name : listURLs) {
 			try {
 				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
 				allTables.addAll(listTables);
+				System.err.println("Ok for url : " + listURLs.indexOf(name) + "/" + ArrayList_size + " (" + BASE_WIKIPEDIA_URL + name + ")");
 			} catch (HttpStatusException e) {
-				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + ": " + BASE_WIKIPEDIA_URL + name
-						+ " : " + e.getMessage());
-			} catch (Exception e) {
-				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
+				System.err.println("Ignoring url " + listURLs.indexOf(name) + "/" + ArrayList_size + " : " + e.getMessage());
 			}
 		}
-
+		System.err.println("There were " + allTables.size() + " tables found in total.");
 		List<Integer> listColumns = new ArrayList<Integer>();
 		List<Integer> listRows = new ArrayList<Integer>();
 		Map<String, Integer> mapTableTypes = new HashMap<String, Integer>();
@@ -192,6 +190,13 @@ public class ExtractorTest {
 		fw.write(forFile.toString());
 		fw.close();
 		System.out.println("Statistics file generated at : " + statsFile.getAbsolutePath());
+		try (BufferedReader br2 = new BufferedReader(new FileReader(statsFile.getAbsolutePath()))) {
+   			String line;
+   			while ((line = br2.readLine()) != null) {
+     	  		System.out.println(line);
+				}
+			br2.close();
+		}
 
 	}
 
