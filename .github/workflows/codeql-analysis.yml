@@ -29,7 +29,6 @@ jobs:
       # If `fail-fast: true`, GitHub will cancel all in-progress and queued jobs in the matrix if any job in the matrix fails
       matrix:
         language: [ 'java' ]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
         os : [ubuntu-latest, windows-latest]
 
     steps:
