@@ -28,7 +28,7 @@ public class ParseWikitable {
 		try {
 			List<Element> trs = getChildAtSameLevel(htmltable, "tr");
 
-			int currentRaw = 0;
+			int currentRow = 0;
 
 			for (Element tr : trs) {
 				int currentCol = 0;
@@ -38,19 +38,19 @@ public class ParseWikitable {
 					int colSpan = Integer.valueOf(tdOuTh.hasAttr("colspan") ? tdOuTh.attr("colspan") : "1");
 
 					for (int j = 0; j < colSpan; j++) {
-						int rawSpan = Integer.valueOf(tdOuTh.hasAttr("rowspan") ? tdOuTh.attr("rowspan") : "1");
+						int rowSpan = Integer.valueOf(tdOuTh.hasAttr("rowspan") ? tdOuTh.attr("rowspan") : "1");
 
-						for (int h = 0; h < rawSpan; h++) {
+						for (int h = 0; h < rowSpan; h++) {
 
-							while (tableau.get(currentRaw + h, currentCol + j) != null) {
+							while (tableau.get(currentRow + h, currentCol + j) != null) {
 								currentCol = currentCol + 1;
 							}
-							tableau.set(currentRaw + h, currentCol + j, tdOuTh.text());
+							tableau.set(currentRow + h, currentCol + j, tdOuTh.text());
 						}
 					}
 					currentCol = currentCol + 1;
 				}
-				currentRaw = currentRaw + 1;
+				currentRow = currentRow + 1;
 			}
 			return tableau;
 		} catch (Exception e) {
