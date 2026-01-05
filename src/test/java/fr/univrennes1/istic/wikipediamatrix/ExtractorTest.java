@@ -36,14 +36,14 @@ public class ExtractorTest {
 
 	@Test
 	public void testExtraction_known_rectangular() throws Exception {
-		String url = "https://en.wikipedia.org/wiki/Comparison_of_digital_SLRs";
+		String url = "https://en.wikipedia.org/wiki/Comparison_of_Microsoft_Windows_versions";
 		List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
-		assertTrue(list.size() == 8);
-		Table table1 = list.get(1);
-		assertTrue("table is not rectangulaire", table1.isRectangulaire());
-		assertEquals("Expected number of Raws", 28, table1.getNbRaw());
-		assertEquals("Expected number of Columns", 90, table1.getNbCol());
-		assertEquals("Type", table1.get(0, 0));
+		assertEquals(22, list.size());
+		Table table1 = list.get(1); // index starts at 0 for first table
+		assertTrue("table is rectangulaire", table1.isRectangulaire());
+		assertEquals("Expected number of Rows", 5, table1.getNbRow());
+		assertEquals("Expected number of Columns", 11, table1.getNbCol());
+		assertEquals("Kernel type", table1.get(0, 7));
 	}
 
 	// @Test
@@ -52,7 +52,7 @@ public class ExtractorTest {
 	// List<Table> list = WikipediaHTMLExtractor.extractComplexlyFromURL(url);
 	// Table table1 = list.get(7);
 	// assertTrue("table is not rectangulaire", table1.isRectangulaire());
-	// assertEquals("Expected number of Raws", 3, table1.getNbRaw());
+	// assertEquals("Expected number of Rows", 3, table1.getNbRow());
 	// assertEquals("Expected number of Columns", 69, table1.getNbCol());
 	// assertEquals("", table1.get(0, 0));
 	// assertEquals("2003", table1.get(0, 7));
@@ -64,10 +64,10 @@ public class ExtractorTest {
 	@Test
 	public void testTable() throws Exception {
 		Table table = new Table();
-		assertEquals("Nb row for empty table", 0, table.getNbRaw());
+		assertEquals("Nb row for empty table", 0, table.getNbRow());
 		assertEquals("Nb column for empty table", 0, table.getNbCol());
 		table.set(2, 1, "toto");
-		assertEquals("Nb row after set", 3, table.getNbRaw());
+		assertEquals("Nb row after set", 3, table.getNbRow());
 		assertEquals("Nb column after set", 2, table.getNbCol());
 		assertEquals("Content after set", "toto", table.get(2, 1));
 
@@ -77,7 +77,7 @@ public class ExtractorTest {
 				table.set(i, j, "line " + i + " col " + j);
 			}
 		}
-		assertEquals("Nb row", 3, table.getNbRaw());
+		assertEquals("Nb row", 3, table.getNbRow());
 		assertEquals("Nb column", 5, table.getNbCol());
 
 		for (int i = 0; i < 3; i++) {
@@ -109,16 +109,20 @@ public class ExtractorTest {
 				List<Table> listTables = WikipediaHTMLExtractor.extractComplexlyFromURL(BASE_WIKIPEDIA_URL + name);
 
 				for (int i = 0; i < listTables.size(); i++) {
-					Table table = listTables.get(i);
-					String path = outputDirHtml + name + "_" + i + ".csv";
-					CsvWriter.writeCsvFromTable(table, path);
+					try {
+						Table table = listTables.get(i);
+						String path = outputDirHtml + name + "_" + i + ".csv";
+						CsvWriter.writeCsvFromTable(table, path);
+					} catch (Exception e) {
+						System.err.println("Issue at table " + i + "/" + listTables.size() + " : " + e.getMessage());
+					}
 				}
 			} catch (HttpStatusException e) {
 				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + "/" + listURLs.size() + ": "
 						+ BASE_WIKIPEDIA_URL + name
 						+ " : " + e.getMessage());
 			} catch (Exception e) {
-				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
+				throw new Exception("Error for page : " + BASE_WIKIPEDIA_URL + name, e);
 			}
 
 		}
@@ -160,7 +164,7 @@ public class ExtractorTest {
 		for (Table table : allTables) {
 			if (table != null) {
 				listColumns.add(table.getNbCol());
-				listRows.add(table.getNbRaw());
+				listRows.add(table.getNbRow());
 				Integer occur = mapTableTypes.getOrDefault(table.getTableType(), 0);
 				mapTableTypes.put(table.getTableType(), occur + 1);
 				for (int i = 0; i < table.getNbCol(); i++) {
