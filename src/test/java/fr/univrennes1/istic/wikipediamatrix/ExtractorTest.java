@@ -114,15 +114,16 @@ public class ExtractorTest {
 						String path = outputDirHtml + name + "_" + i + ".csv";
 						CsvWriter.writeCsvFromTable(table, path);
 					} catch (Exception e) {
-						System.err.println("Issue at table " + i + "/" + listTables.size() + " : " + e.getMessage());
+						throw new Exception("Issue at table " + i + "/" + listTables.size(), e.getMessage());
 					}
 				}
 			} catch (HttpStatusException e) {
 				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + "/" + listURLs.size() + ": "
 						+ BASE_WIKIPEDIA_URL + name
-						+ " : " + e.getMessage());
+						+ " : " + e.getStatusCode());
 			} catch (Exception e) {
-				throw new Exception("Error for page : " + BASE_WIKIPEDIA_URL + name, e);
+				throw new Exception(
+						"Error for page : " + BASE_WIKIPEDIA_URL + name, e);
 			}
 
 		}
@@ -151,7 +152,7 @@ public class ExtractorTest {
 			} catch (HttpStatusException e) {
 				System.err.println("Ignoring url at line " + listURLs.indexOf(name) + "/" + listURLs.size() + ": "
 						+ BASE_WIKIPEDIA_URL + name
-						+ " : " + e.getMessage());
+						+ " : " + e.getStatusCode());
 			} catch (Exception e) {
 				throw new Exception("Error for page " + BASE_WIKIPEDIA_URL + name, e);
 			}
