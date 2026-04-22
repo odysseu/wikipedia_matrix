@@ -151,14 +151,30 @@ public class WikipediaHTMLExtractor {
 			Element htmltable = tables.get(i);
 			String tableType = htmltable.className();
 
-			if (listRelevantType.contains(tableType) || tableType.isEmpty()) {
+			// Check if any ignore type is contained in the table type
+			boolean shouldIgnore = false;
+			for (String ignore : listIgnoreType) {
+				if (tableType.contains(ignore.trim())) {
+					shouldIgnore = true;
+					break;
+				}
+			}
+
+			// Also ignore common patterns like ambox, navbox, toc, infobox, sidebar
+			if (!shouldIgnore && (tableType.contains("ambox") || tableType.contains("navbox") || 
+					tableType.contains("toc") || tableType.contains("infobox") || 
+					tableType.contains("sidebar") || tableType.contains("metadata"))) {
+				shouldIgnore = true;
+			}
+
+			if (!shouldIgnore && (listRelevantType.contains(tableType) || tableType.isEmpty() || tableType.contains("wikitable"))) {
 
 				if (!ParseWikitable.isContainedInAnotherTable(htmltable)) {
 					Table wikitable = ParseWikitable.parseComplexTable(htmltable);
 					res.add(wikitable);
 				}
-			} else if (listIgnoreType.contains(tableType)) {
-
+			} else if (shouldIgnore) {
+				// Skip ignored tables
 			} else {
 				throw new Exception("Unknown Table Type: " + tableType);
 			}

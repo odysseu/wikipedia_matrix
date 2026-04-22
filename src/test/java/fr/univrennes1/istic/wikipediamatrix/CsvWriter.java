@@ -14,6 +14,10 @@ import bean.Table;
 public class CsvWriter {
 
 	public static void writeCsvFromTable(Table table, String path) throws IOException {
+		if (table == null) {
+			return;
+		}
+		Files.createDirectories(Paths.get(path).getParent());
 		Writer writer = Files.newBufferedWriter(Paths.get(path));
 		ICSVWriter csvWriter = new CSVWriterBuilder(writer).withSeparator(';')
 				// .withQuoteChar(CSVWriter.NO_QUOTE_CHARACTER)
