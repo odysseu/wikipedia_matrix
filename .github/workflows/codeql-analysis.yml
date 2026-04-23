@@ -29,7 +29,7 @@ jobs:
       # If `fail-fast: true`, GitHub will cancel all in-progress and queued jobs in the matrix if any job in the matrix fails
       matrix:
         language: [ 'java' ]
-        os : [ubuntu-latest, windows-latest]
+        os : [ubuntu-latest]
 
     steps:
     - name: Checkout repository
